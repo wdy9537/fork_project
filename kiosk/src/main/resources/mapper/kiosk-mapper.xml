@@ -138,8 +138,6 @@
 	    JOIN OPT OS ON OM.OPTION_NO = OS.PR_OPTION_NO
 	) O ON M.MENU_NO = O.MENU_NO
 	ORDER BY CM.CATEGORY_NO , OPTION_NO ASC,  SUB_OPTION_NAME
-	<!-- 마지막 오더바이 한개 추가했어요 -->
-	
 </select>
 
 <select id="selectCoo" resultMap="cooResultMap">
