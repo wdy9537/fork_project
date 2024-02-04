@@ -107,7 +107,6 @@ const DutchpayByPrice = (props) => {
         }
     }
 
-
     // 최대개수 넘어가면 모달
     const [modalShow, setModalShow] = useState(false);
     const [numpadModalShow , setNumpadModalShow] = useState(false);
