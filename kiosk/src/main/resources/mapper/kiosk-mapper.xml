@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="kiosk">
+
+<!-- 최상위 카테고리만 선택 collection으로 하위 카테고리 선택 -->
+<resultMap type="mainCategory" id="mainCategoryResultMap">
+	<id column="CATEGORY_NO" property="categoryNo"/>
+	<result column="CATEGORY_NAME" property="categoryName"/>
+	<result column="PR_CATEGORY_NO" property="prCategoryNo"/>
+	<collection property="categoryList" ofType="category" javaType="java.util.List" resultMap="subCategoryResultMap"/>
+</resultMap>
+
+<!-- 상세카테고리 선택  collection으로 카테고리별 메뉴 불러오기 -->
+<resultMap type="subCategory" id="subCategoryResultMap">
+	<id column="SUB_CATEGORY_NO" property="categoryNo"/>
+	<result column="SUB_CATEGORY_NAME" property="categoryName"/>
+	<result column="SUB_PR_CATEGORY_NO" property="prCategoryNo"/>
+	<collection property="menuList" ofType="menu" javaType="java.util.List" resultMap="menuResultSet"/>
+</resultMap>
+
+<!-- 메뉴 선택 컬렉션으로 메뉴별 옵션(상위 옵션) 불러오기 -->
+<resultMap type="menu" id="menuResultSet">
+	<id column="MENU_NO" property="menuNo"/>
+	<result column="PRICE" property="price"/>
+	<result column="MENU_NAME" property="menuName"/>
+	<result column="MENU_DETAIL" property="menuDetail"/>
+	<result column="ORIGIN_NAME" property="originName"/>
+	<result column="CHANGE_NAME" property="changeName"/>
+	<result column="FILE_PATH" property="filePath"/>
+	<result column="CATEGORY_NO" property="categoryNo"/>
+	<collection property="optList" ofType="opt" javaType="java.util.List" resultMap="mainOptionResultSet"/>
+</resultMap>
+
+<!-- 상위 옵션  컬렉션으로 하위 옵션 불러오기 -->
+<resultMap type="mainOpt" id="mainOptionResultSet">
+	<id column="OPTION_NO" property="optionNo"/>
+	<result column="OPTION_NAME" property="optionName"/>
+	<result column="PRICE" property="price"/>
+	<result column="PR_OPTION_NO" property="prOptionNo"/>
+	<result column="MENU_NO" property="menuNo"/>
+	<collection property="optList" ofType="opt" javaType="java.util.List" resultMap="optionResultSet"/>
+</resultMap>
+
+<resultMap type="mainOpt" id="mainOptionResultSet2">
+	<id column="OPTION_NO" property="optionNo"/>
+	<result column="OPTION_NAME" property="optionName"/>
+	<result column="OPRICE" property="price"/>
+	<result column="PR_OPTION_NO" property="prOptionNo"/>
+	<result column="MENU_NO" property="menuNo"/>
+	<collection property="optList" ofType="opt" javaType="java.util.List" resultMap="optionResultSet"/>
+</resultMap>
+
+<!-- 하위 옵션 선택 -->
+<resultMap type="opt" id="optionResultSet">
+	<id column="SUB_OPTION_NO" property="optionNo"/>
+	<result column="SUB_OPTION_NAME" property="optionName"/>
+	<result column="SUB_PRICE" property="price"/>
+	<result column="SUB_PR_OPTION_NO" property="prOptionNo"/>
+	<result column="SUB_MENU_NO" property="menuNo"/>
+</resultMap>
+
+
+<!-- 원산지 -->
+<resultMap type="coo" id="cooResultMap">
+	<id column="COO_NO" property="cooNo" />
+	<result column="COO_NAME" property="cooName"/>
+	<result column="COO_COUNTRY" property="cooCountry"/>
+</resultMap>
+
+<!-- 영수증 데이터 가져와서 보여 -->
+<resultMap type="totalReceipt" id="TotalReceiptResultSet">
+	<id column="TR_NO" property="trNo"/>
+	<result column="KIOSK_NO" property="kioskNo"/>
+	<result column="ORDER_STATUS" property="orderStatus"/>
+	<collection property="rList" ofType="receipt" javaType="java.util.List" resultMap="ReceiptResultSet"/>
+</resultMap>
+
+<resultMap type="receipt" id="ReceiptResultSet">
+	<id column="RECEIPT_NO" property="receiptNo"/>
+	<result column="PAY_NO" property="payNo"/>	
+	<result column="TR_NO" property="trNo" />
+	<association property="pay" resultMap="PayResultMap"/>
+	<collection property="rmList" ofType="receiptMenu" javaType="java.util.List" resultMap="ReceiptMenuResultMap"/>
+</resultMap>
+
+<resultMap type="pay" id="PayResultMap">
+	<id column="PAY_NO" property="payNo"/>
+	<result column="PAY_DATE" property="payDate"/>	
+	<result column="PRICE" property="price" />
+</resultMap>
+
+<resultMap type="receiptMenu" id="ReceiptMenuResultMap">
+	<id column="RCM_NO" property="rcmNo"/>
+	<result column="RECEIPT_NO" property="receiptNo"/>	
+	<result column="MENU_NO" property="menuNo" />
+	<result column="CNT" property="cnt" />
+	<association property="menu" resultMap="menuResultSet2"/>
+	<collection property="roList" ofType="receiptOption" javaType="java.util.List" resultMap="ReceiptOptionResultMap"/>
+</resultMap>
+
+<resultMap type="menu" id="menuResultSet2">
+	<id column="MENU_NO" property="menuNo"/>
+	<result column="MENU_NAME" property="menuName"/>
+	<result column="MPRICE" property="price"/>
+</resultMap>
+
+<resultMap type="receiptOption" id="ReceiptOptionResultMap">
+	<result column="OPTION_NO" property="optionNo"/>
+	<result column="RCM_NO" property="rcmNo"/>
+	<association property="opt" resultMap="optionResultSet"/>
+</resultMap>
+
+<!-- ddddddddddddddddddddddddddddddddddddddddddddddddd -->
+<!-- 2차 수정본 추가 -->
+<!-- <select id="selectCategoryAndMenuAndOptions" resultMap="mainCategoryResultMap">
+	SELECT 
+	    CATEGORY_NO,
+	    CATEGORY_NAME,
+	    PR_CATEGORY_NO
+	FROM CATEGORY 
+	WHERE PR_CATEGORY_NO IS NULL
+	ORDER BY CATEGORY_NO ASC
+</select> -->
+
+<select id="selectCategoryAndMenuAndOptions" resultMap="mainCategoryResultMap">
+	<!-- 1차 작업 -->
+	<!-- SELECT * FROM (SELECT 
+	    CATEGORY_NO,
+	    CATEGORY_NAME,
+	    PR_CATEGORY_NO
+	FROM CATEGORY 
+	START WITH PR_CATEGORY_NO IS NULL
+	CONNECT BY PRIOR CATEGORY_NO = PR_CATEGORY_NO) C
+	LEFT JOIN MENU M ON C.CATEGORY_NO = M.CATEGORY_NO
+	LEFT JOIN (
+	    SELECT 
+	        *
+	    FROM OPT 
+	    START WITH PR_OPTION_NO IS NULL
+	    CONNECT BY PRIOR OPTION_NO = PR_OPTION_NO
+	) O ON M.MENU_NO = O.MENU_NO
+	ORDER BY C.CATEGORY_NO , OPTION_NO ASC -->
+	<!-- 2차수정 : 쿼리문 2개로 나눠서 , 카테고리 계층구조 생성-->
+<!-- 	SELECT * FROM CATEGORY C
+	LEFT JOIN MENU M ON C.CATEGORY_NO = M.CATEGORY_NO
+	LEFT JOIN (
+	    SELECT 
+	        *
+	    FROM OPT 
+	    START WITH PR_OPTION_NO IS NULL
+	    CONNECT BY PRIOR OPTION_NO = PR_OPTION_NO
+	) O ON M.MENU_NO = O.MENU_NO
+	WHERE PR_CATEGORY_NO = #{categoryNo}
+	ORDER BY C.CATEGORY_NO , OPTION_NO ASC -->
+	
+	<!-- 3차 수정본 : 쿼리문 통합, 옵션 계층 추가 필요 -->
+	<!-- SELECT 
+		CM.CATEGORY_NO ,
+		CM.CATEGORY_NAME,
+		CM.PR_CATEGORY_NO,
+		CS.CATEGORY_NO AS SUB_CATEGORY_NO ,
+		CS.CATEGORY_NAME AS  SUB_CATEGORY_NAME,
+		CS.PR_CATEGORY_NO AS  SUB_PR_CATEGORY_NO,
+		M.*,O.* 
+	FROM CATEGORY CM
+	JOIN CATEGORY CS ON CM.CATEGORY_NO = CS.PR_CATEGORY_NO
+	LEFT JOIN MENU M ON CS.CATEGORY_NO = M.CATEGORY_NO
+	LEFT JOIN (
+	    SELECT 
+	        *
+	    FROM OPT 
+	    START WITH PR_OPTION_NO IS NULL
+	    CONNECT BY PRIOR OPTION_NO = PR_OPTION_NO
+	) O ON M.MENU_NO = O.MENU_NO
+	ORDER BY CM.CATEGORY_NO , OPTION_NO ASC -->
+	
+	<!-- 4차 수정본 -->
+ 	SELECT 
+		CM.CATEGORY_NO ,
+		CM.CATEGORY_NAME,
+		CM.PR_CATEGORY_NO,
+		CS.CATEGORY_NO AS SUB_CATEGORY_NO ,
+		CS.CATEGORY_NAME AS  SUB_CATEGORY_NAME,
+		CS.PR_CATEGORY_NO AS  SUB_PR_CATEGORY_NO,
+		M.*,O.* 
+	FROM CATEGORY CM
+	JOIN CATEGORY CS ON CM.CATEGORY_NO = CS.PR_CATEGORY_NO
+	LEFT JOIN MENU M ON CS.CATEGORY_NO = M.CATEGORY_NO
+	LEFT JOIN (
+	    SELECT 
+	      OM.OPTION_NO ,
+	      OM.OPTION_NAME,
+	      OM.PRICE,
+	      OM.PR_OPTION_NO,
+          OM.MENU_NO,
+	      OS.OPTION_NO AS SUB_OPTION_NO ,
+	      OS.OPTION_NAME AS  SUB_OPTION_NAME,
+	      OS.PRICE AS  SUB_PRICE,
+	      OS.PR_OPTION_NO AS  SUB_PR_OPTION_NO,
+	      OS.MENU_NO AS  SUB_MENU_NO
+	    FROM OPT OM
+	    JOIN OPT OS ON OM.OPTION_NO = OS.PR_OPTION_NO
+	) O ON M.MENU_NO = O.MENU_NO
+	ORDER BY CM.CATEGORY_NO , OPTION_NO ASC,  SUB_OPTION_NAME
+	<!-- 마지막 오더바이 한개 추가했어요 -->
+	
+</select>
+
+<select id="selectCoo" resultMap="cooResultMap">
+	SELECT COO_NO, COO_NAME, COO_COUNTRY
+	FROM COO
+	ORDER BY COO_NO
+</select>
+
+<select id="selectTotalReceipt" resultMap="TotalReceiptResultSet">
+<!-- 1치 -->
+<!-- SELECT TR.*, R.*, RM.*, RO.*, M.MENU_NAME, O.OPTION_NAME
+FROM TOTAL_RECEIPT TR
+LEFT JOIN RECEIPT R ON R.TR_NO = TR.TR_NO
+LEFT JOIN RECEIPT_MENU RM ON RM.RECEIPT_NO = R.RECEIPT_NO
+LEFT JOIN MENU M ON M.MENU_NO = RM.MENU_NO
+LEFT JOIN RECEIPT_OPTION RO ON RO.RCM_NO = RM.RCM_NO
+LEFT JOIN OPT O ON O.OPTION_NO = RO.OPTION_NO
+WHERE TR.KIOSK_NO = #{kioskNo} AND TR.ORDER_STATUS = 'Y'
+ -->
+<!-- 2차 -->
+<!-- SELECT *
+FROM TOTAL_RECEIPT TR
+JOIN (
+	SELECT *
+	FROM RECEIPT R
+    LEFT JOIN (
+        SELECT *
+        FROM RECEIPT_MENU RM
+        JOIN MENU M ON M.MENU_NO = RM.MENU_NO
+        LEFT JOIN (
+            SELECT RO.*, O.OPTION_NAME
+            FROM RECEIPT_OPTION RO
+            JOIN OPT O ON O.OPTION_NO = RO.OPTION_NO
+        ) USING (RCM_NO)
+    ) USING (RECEIPT_NO)
+) USING (TR_NO)
+WHERE TR.KIOSK_NO = 2 AND ORDER_STATUS='Y' -->
+	
+	SELECT TR.*, R.*, RM.*, RO.*,P.*, M.MENU_NAME, M.PRICE MPRICE,
+	 O.OPTION_NAME SUB_OPTION_NAME, O.PRICE SUB_PRICE, O.OPTION_NO SUB_OPTION_NO, O.PR_OPTION_NO SUB_PR_OPTION_NO , O.MENU_NO SUB_MENU_NO
+FROM TOTAL_RECEIPT TR
+LEFT JOIN RECEIPT R ON R.TR_NO = TR.TR_NO
+LEFT JOIN RECEIPT_MENU RM ON RM.RECEIPT_NO = R.RECEIPT_NO
+LEFT JOIN MENU M ON M.MENU_NO = RM.MENU_NO
+LEFT JOIN RECEIPT_OPTION RO ON RO.RCM_NO = RM.RCM_NO
+LEFT JOIN OPT O ON O.OPTION_NO = RO.OPTION_NO
+JOIN PAY P ON R.PAY_NO=P.PAY_NO
+WHERE TR.KIOSK_NO = #{kioskNo} AND TR.ORDER_STATUS = 'Y'
+ORDER BY R.RECEIPT_NO , RM.RCM_NO
+
+</select>
+
+<!-- basicPay -->
+<select id="selectTotalReceiptNo" resultType="int">
+	SELECT TR_NO
+	FROM TOTAL_RECEIPT
+	WHERE KIOSK_NO = #{kioskNo} AND ORDER_STATUS = 'Y'
+</select>
+
+<insert id="insertTotalReceiptNo" parameterType="hashmap">
+	<selectKey keyProperty="totalReceiptNo" order="BEFORE" resultType="int" >
+		SELECT SEQ_TTRC.NEXTVAL
+		FROM DUAL
+	</selectKey>
+	
+	INSERT INTO TOTAL_RECEIPT 
+	VALUES ( #{totalReceiptNo}, #{kioskNo}, DEFAULT )
+</insert>
+
+<insert id="insertPay" parameterType="hashmap">
+	<selectKey keyProperty="payNo" order="BEFORE" resultType="int" >
+		SELECT SEQ_PAY.NEXTVAL
+		FROM DUAL
+	</selectKey>
+	
+	INSERT INTO PAY 
+	VALUES ( #{payNo}, DEFAULT , #{cartTotalPrice} )
+</insert>
+
+<insert id="insertReceipt" parameterType="hashmap">
+	<selectKey keyProperty="receiptNo" order="BEFORE" resultType="int" >
+		SELECT SEQ_RC.NEXTVAL
+		FROM DUAL
+	</selectKey>
+	
+	INSERT INTO RECEIPT 
+	VALUES ( #{receiptNo}, #{payNo} , #{totalReceiptNo} )
+</insert>
+
+<insert id="insertReceiptMenus" parameterType="hashmap">
+	<selectKey keyProperty="receiptMenuNo" order="BEFORE" resultType="int" >
+		SELECT SEQ_RCM.NEXTVAL
+		FROM DUAL
+	</selectKey>
+	
+	INSERT INTO RECEIPT_MENU
+	VALUES ( #{receiptMenuNo}, #{receiptNo} , #{menuNo} , #{count} )
+</insert>
+
+<insert id="insertReceiptOptions" parameterType="hashMap">
+	INSERT INTO RECEIPT_OPTION
+	VALUES ( #{receiptMenuNo}, #{optionNo} )    
+</insert>
+
+<insert id="insertDutchPay" parameterType="hashmap">
+	<selectKey keyProperty="payNo" order="BEFORE" resultType="int" >
+		SELECT SEQ_PAY.NEXTVAL
+		FROM DUAL
+	</selectKey>
+	
+	INSERT INTO PAY 
+	VALUES ( #{payNo}, DEFAULT , #{totalPrice} )
+</insert>
+
+ 	
+</mapper>

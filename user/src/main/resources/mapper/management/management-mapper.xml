@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="managementMapper">
+	
+	<resultMap type="category" id="categoryResultSet">
+		<id column="CATEGORY_NO" property="categoryNo"/>
+		<result column="CATEGORY_NAME" property="categoryName"/>
+		<result column="PR_CATEGORY_NO" property="prCategoryNo"/>
+	</resultMap>
+	
+	<resultMap type="categoryList" id="categoryListResultSet">
+		<id column="CATEGORY_NO" property="categoryNo"/>
+		<result column="CATEGORY_NAME" property="categoryName"/>
+		<result column="PR_CATEGORY_NO" property="prCategoryNo"/>
+		<result column="PR_CATEGORY_NAME" property="prCategoryName"/>
+	</resultMap>
+	
+	<resultMap type="option" id="optionResultSet">
+		<id column="OPTION_NO" property="optionNo"/>
+		<result column="OPTION_NAME" property="optionName"/>
+		<result column="PRICE" property="price"/>
+		<result column="PR_OPTION_NO" property="prOptionNo"/>
+		<result column="MENU_NO" property="menuNo"/>
+	</resultMap>
+	
+	<resultMap type="coo" id="cooResultSet">
+		<id column="COO_NO" property="cooNo"/>
+		<result column="COO_NAME" property="cooName"/>
+		<result column="COO_COUNTRY" property="cooCountry"/>
+	</resultMap>
+	
+	<resultMap type="menu" id="menuResultSet">
+		<id column="MENU_NO" property="menuNo"/>
+		<result column="MENU_NAME" property="menuName"/>
+		<result column="MENU_DETAIL" property="menuDetail"/>
+		<result column="PRICE" property="price"/>
+		<result column="ORIGIN_NAME" property="originName"/>
+		<result column="CHANGE_NAME" property="changeName"/>
+		<result column="CATEGORY_NO" property="categoryNo"/>
+		<result column="FILE_PATH" property="filePath"/>
+	</resultMap>
+	
+	<resultMap type="menuList" id="menuListResultSet">
+		<id column="MENU_NO" property="menuNo"/>
+		<result column="MENU_NAME" property="menuName"/>
+		<result column="MENU_DETAIL" property="menuDetail"/>
+		<result column="PRICE" property="price"/>
+		<result column="ORIGIN_NAME" property="originName"/>
+		<result column="CHANGE_NAME" property="changeName"/>
+		<result column="CATEGORY_NO" property="categoryNo"/>
+		<result column="FILE_PATH" property="filePath"/>
+		<result column="CATEGORY_NAME" property="categoryName"/>
+	</resultMap>
+	
+	<resultMap type="OptionList" id="optionListResultSet">
+		<id column="OPTION_NO" property="optionNo"/>
+		<result column="OPTION_NAME" property="optionName"/>
+		<result column="PRICE" property="price"/>
+		<result column="PR_OPTION_NO" property="prOptionNo"/>
+		<result column="MENU_NO" property="menuNo"/>
+		<result column="MENU_NAME" property="menuName"/>
+	</resultMap>
+	
+	<resultMap type="license" id="licenseResultSet">
+		<id column="LICENSE_NO" property="licenseNo"/>
+		<result column="LICENSE_DATE" property="licenseDate"/>
+		<result column="LICENSE_PRICE" property="licensePrice"/>
+	</resultMap>
+	
+	<resultMap type="licenseHistory" id="licenseHistoryResultSet">
+		<id column="LH_NO" property="lhNo"/>
+		<result column="LICENSE_NO" property="licenseNo"/>
+		<result column="MEMBER_NO" property="memberNo"/>
+		<result column="LH_DATE" property="lhDate"/>
+		<result column="LH_DAY" property="lhDay"/>
+		<result column="LH_STATUS" property="lhStatus"/>
+	</resultMap>
+
+	<insert id="insertCategory">
+		INSERT INTO CATEGORY VALUES (
+			SEQ_CATEGORY.NEXTVAL,
+			#{categoryName},
+			#{prCategoryNo}
+		)
+	</insert>
+	
+	<insert id="insertMenu">
+		INSERT INTO MENU VALUES (
+			SEQ_MN.NEXTVAL,
+			#{menuName},
+			#{menuDetail},
+			#{price},
+			#{originName},
+			#{changeName},
+			#{filePath},
+			#{categoryNo}
+		)
+	</insert>
+	
+	<select id="selectCategoryList" resultMap="categoryResultSet">
+		SELECT CATEGORY_NO, CATEGORY_NAME, PR_CATEGORY_NO
+		FROM CATEGORY
+	</select>
+	
+	<insert id="insertOption">
+		INSERT INTO OPT 
+		VALUES (
+			SEQ_OPTION.NEXTVAL,
+			#{optionName},
+			#{price},
+			#{prOptionNo},
+			#{menuNo}
+		)
+	</insert>
+	
+	<select id="selectOptionList" resultMap="optionResultSet">
+		SELECT OPTION_NO, OPTION_NAME, PRICE, NVL(PR_OPTION_NO, 0), MENU_NO
+		FROM OPT
+	</select>
+	
+	<insert id="insertCoo">
+		INSERT INTO COO VALUES (
+			SEQ_COO.NEXTVAL,
+			#{cooName},
+			#{cooCountry}
+		)
+	</insert>
+	
+	<delete id="deleteCoo" parameterType="int">
+		DELETE FROM COO
+		WHERE COO_NO = #{cooNo}
+	</delete>
+	
+	<select id="selectCategory" parameterType="string" resultMap="categoryResultSet">
+		SELECT CATEGORY_NO, CATEGORY_NAME, PR_CATEGORY_NO
+		FROM CATEGORY
+		ORDER BY CATEGORY_NO ASC
+	</select>
+	
+	<select id="selectCategoryCount" parameterType="hashmap" resultType="int">
+		SELECT COUNT(*)
+		FROM CATEGORY
+	</select>
+	
+	<select id="selectCoo" parameterType="string" resultMap="cooResultSet">
+		SELECT COO_NO, COO_NAME, COO_COUNTRY
+		FROM COO
+		ORDER BY COO_NO ASC
+	</select>
+	
+	<select id="selectCooCount" parameterType="hashmap" resultType="int">
+		SELECT COUNT(*)
+		FROM COO
+	</select>
+	
+	<update id="updateCategory" parameterType="category">
+		UPDATE CATEGORY
+		SET 
+			CATEGORY_NAME = #{categoryName},
+			PR_CATEGORY_NO = #{prCategoryNo}
+		WHERE CATEGORY_NO = #{categoryNo}
+	</update>
+	
+	<select id="selectCategoryOne" parameterType="int" resultMap="categoryResultSet">
+		SELECT *
+		FROM CATEGORY
+		WHERE CATEGORY_NO = #{categoryNo}
+	</select>
+	
+	<delete id="deleteCategory" parameterType="int">
+		DELETE FROM CATEGORY
+		WHERE CATEGORY_NO = #{categoryNo}
+	</delete>
+	
+	<select id="selectOption" parameterType="string" resultMap="optionListResultSet">
+		SELECT 	O.OPTION_NO, O.OPTION_NAME, O.PRICE, NVL(PR_OPTION_NO, 0), O.MENU_NO, M.MENU_NAME
+		FROM OPT O
+		LEFT JOIN MENU M ON (O.MENU_NO = M.MENU_NO)
+		ORDER BY OPTION_NO ASC
+	</select>
+	
+	<select id="selectOptionCount" parameterType="hashmap" resultType="int">
+		SELECT COUNT(*)
+		FROM OPT
+	</select>
+	
+	<select id="selectOptionOne" parameterType="int" resultMap="optionResultSet">
+		SELECT *
+		FROM OPT
+		WHERE OPTION_NO = #{optionNo}
+	</select>
+	
+	<delete id="deleteOption" parameterType="int">
+		DELETE FROM OPT
+		WHERE OPTION_NO = #{optionNo}
+	</delete>
+	
+	<select id="selectMenu" parameterType="string" resultMap="menuResultSet">
+		SELECT *
+		FROM MENU
+		ORDER BY CATEGORY_NO ASC
+	</select>
+	
+	<select id="selectAllMenu" resultMap="menuResultSet">
+		SELECT *
+		FROM MENU
+		ORDER BY CATEGORY_NO ASC
+	</select>
+	
+	<select id="selectAllCategory" resultMap="categoryResultSet">
+		SELECT CATEGORY_NO, CATEGORY_NAME, NVL(PR_CATEGORY_NO, 0) PR_CATEGORY_NO
+		FROM CATEGORY
+		ORDER BY CATEGORY_NO ASC
+	</select>
+	
+	<select id="selectDetailMenu" parameterType="int" resultMap="menuListResultSet">
+		SELECT M.*, C.CATEGORY_NAME
+		FROM MENU M
+		JOIN CATEGORY C ON (C.CATEGORY_NO = M.CATEGORY_NO)
+		WHERE M.MENU_NO = #{menuNo}
+	</select>
+	
+	<delete id="deleteMenu" parameterType="menu">
+		DELETE FROM MENU
+		WHERE MENU_NO = #{menuNo}
+	</delete>
+	
+	<update id="updateMenu" parameterType="menu">
+		UPDATE MENU 
+		SET MENU_NAME = #{menuName},
+			MENU_DETAIL = #{menuDetail},
+			PRICE = #{price},
+			ORIGIN_NAME = #{originName},
+			CHANGE_NAME = #{changeName},
+			CATEGORY_NO = #{categoryNo},
+			FILE_PATH = #{filePath}
+		WHERE MENU_NO = #{menuNo}
+	</update>
+	
+	<select id="selectMenuOne" parameterType="int" resultMap="menuResultSet">
+		SELECT *
+		FROM MENU
+		WHERE MENU_NO = #{menuNo}
+	</select>
+	
+	<select id="selectMenuList" resultMap="menuResultSet">
+		SELECT *
+		FROM MENU
+		ORDER BY MENU_NO ASC
+	</select>
+	
+	<update id="updateOption" parameterType="option">
+		UPDATE OPT
+		SET 
+			OPTION_NAME = #{optionName},
+			PRICE = #{price},
+			PR_OPTION_NO = #{prOptionNo}
+		WHERE OPTION_NO = #{optionNo}
+	</update>
+	
+	<select id="selectLicenseNo" parameterType="int" resultMap="licenseResultSet">
+		SELECT *
+		FROM LICENSE
+		WHERE LICENSE_PRICE = #{licensePrice}
+	</select>
+	
+	<insert id="insertLicenseHistory">
+		INSERT INTO LICENSE_HISTORY
+		VALUES(
+		    SEQ_LHNO.NEXTVAL,
+		    #{licenseNo},
+		    #{memberNo},
+		    SYSDATE,
+		    ADD_MONTHS(SYSDATE, (SELECT LICENSE_DATE FROM LICENSE WHERE LICENSE_NO = #{licenseNo})),
+		    'Y'
+		)
+	</insert>
+	
+	<select id="checkLicenseHistory" parameterType="int" resultType="int">
+		SELECT COUNT(*)
+		FROM LICENSE_HISTORY
+		WHERE MEMBER_NO = #{memberNo}
+	</select>
+	
+	<update id="updateLicenseHistory">
+		UPDATE LICENSE_HISTORY	
+		SET LH_DATE = SYSDATE,
+			LH_DAY = ADD_MONTHS(LH_DAY, (SELECT LICENSE_DATE FROM LICENSE WHERE LICENSE_NO = #{licenseNo}))
+		WHERE MEMBER_NO = #{memberNo}
+	</update>
+	
+	<select id="selectMenuOptionList" parameterType="int" resultMap="optionResultSet">
+		SELECT *
+		FROM OPT
+		WHERE MENU_NO = #{menuNo}
+	</select>
+	
+	<update id="updateLhStatus">
+		UPDATE LICENSE_HISTORY
+		SET LH_STATUS = 'N'
+		WHERE TO_DATE(LH_DAY, 'YY/MM/DD') &lt; SYSDATE
+	</update>
+
+	<select id="checkLicense" parameterType="int" resultType="int">
+		SELECT *
+		FROM LICENSE_HISTORY
+		WHERE LH_STATUS = 'Y' AND MEMBER_NO = #{memberNo}
+	</select>
+	
+	<select id="selectCategoryList2" parameterType="string" resultMap="categoryListResultSet">
+		SELECT C.CATEGORY_NO, C.CATEGORY_NAME, NVL(C.PR_CATEGORY_NO, 0), NVL(P.CATEGORY_NAME, '없음') AS PR_CATEGORY_NAME
+		FROM CATEGORY C
+		LEFT JOIN CATEGORY P ON C.PR_CATEGORY_NO = P.CATEGORY_NO
+		ORDER BY CATEGORY_NO ASC
+	</select>
+
+</mapper>

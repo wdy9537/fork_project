@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="salesMapper">
+
+    <resultMap id="structureResultSet" type="Structure">
+        <result column="KIOSK_NO" property="kioskNo" />
+        <result column="STRUC_TYPE" property="strucType" />
+        <result column="STRUC_TITLE" property="strucTitle" />
+        <result column="POSITION_X" property="positionX" />
+        <result column="POSITION_Y" property="positionY" />
+    </resultMap>
+    
+    <resultMap type="TotalMenuList" id="totalMenuListResultSet">
+    	<result column="KIOSK_NO" property="kioskNo" />
+        <result column="MENU_NAME" property="menuName" />
+        <result column="CNT" property="cnt" />
+        <result column="PRICE" property="price" />
+        <result column="OPTION_NAME" property="optionName" />
+        <result column="SUB_PRICE" property="subPrice" />
+        <result column="TOTAL_PRICE" property="totalPrice" />
+    </resultMap>
+    
+    <select id="selectStructureList" resultMap="structureResultSet">
+        SELECT *
+        FROM STRUCTURE    
+    </select>
+    
+    <delete id="deleteStructure">
+        DELETE FROM STRUCTURE
+    </delete>
+    
+    <insert id="saveStructure" parameterType="structure">
+        INSERT INTO STRUCTURE VALUES
+        (#{kioskNo}, #{strucType}, #{strucTitle}, #{positionX}, #{positionY})
+    </insert>
+    
+    
+    <resultMap id="receiptResultSet" type="receipt">
+        <result column="MENU_NAME" property="menuName" />
+        <result column="CNT" property="cnt" />
+        <result column="PRICE" property="price" />
+        <result column="KIOSK_NO" property="kioskNo" />
+    </resultMap>
+    
+    <select id="selectOrderList" resultMap="receiptResultSet">
+        SELECT MENU_NAME, CNT, PRICE, KIOSK_NO
+        FROM STRUCTURE
+        JOIN TOTAL_RECEIPT USING(KIOSK_NO)
+        JOIN RECEIPT USING(TR_NO)
+        JOIN RECEIPT_MENU USING(RECEIPT_NO)
+        JOIN MENU USING(MENU_NO)
+        WHERE ORDER_STATUS = 'Y'
+        ORDER BY RCM_NO
+    </select>
+    
+    <select id="detailOrderList" resultMap="totalMenuListResultSet">
+        SELECT
+		KIOSK_NO,
+		MAX(MENU_NAME) MENU_NAME,
+		MAX(CNT) CNT ,
+		MAX(M.PRICE) PRICE,
+		LISTAGG(OPTION_NAME, ',') WITHIN GROUP (ORDER BY OPTION_NAME) OPTION_NAME,
+		SUM(O.PRICE)SUB_PRICE,
+		MAX(M.PRICE)+ NVL(SUM(O.PRICE),0) AS TOTAL_PRICE
+		FROM TOTAL_RECEIPT TR
+		LEFT JOIN RECEIPT R ON R.TR_NO = TR.TR_NO
+		LEFT JOIN RECEIPT_MENU RM ON RM.RECEIPT_NO = R.RECEIPT_NO
+		LEFT JOIN MENU M ON M.MENU_NO = RM.MENU_NO
+		LEFT JOIN RECEIPT_OPTION  RO ON RO.RCM_NO = RM.RCM_NO
+		LEFT JOIN OPT O ON O.OPTION_NO = RO.OPTION_NO
+		WHERE TR.KIOSK_NO = #{kioskNo} AND TR.ORDER_STATUS = 'Y' AND M.MENU_NAME IS NOT NULL
+		GROUP BY KIOSK_NO, RM.MENU_NO
+    </select>
+    
+    <update id="clearTable">
+        UPDATE TOTAL_RECEIPT
+        SET ORDER_STATUS = 'N'
+        WHERE KIOSK_NO = #{kioskNo}
+    </update>
+    
+</mapper>

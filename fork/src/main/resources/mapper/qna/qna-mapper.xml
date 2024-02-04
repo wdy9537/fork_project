@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="qnaMapper">
+
+
+<resultMap type="qna" id="qnaResultSet">
+	<id column="BOARD_NO" property="boardNo"/>
+	<result column="BOARD_TITLE" property="boardTitle"/>
+	<result column="BOARD_CONTENT" property="boardContent"/>
+	<result column="BOARD_WRITER" property="boardWriter"/>
+	<result column="BOARD_CREATE_DATE" property="boardCreateDate"/>
+	<result column="BOARD_STATUS" property="boardStatus"/>
+	<result column="BOARD_COUNT" property="boardCount"/>
+</resultMap>
+
+
+
+<select id="selectList" parameterType="string" resultMap="qnaResultSet">
+	SELECT 
+		BOARD_NO,
+		BOARD_TITLE,
+		MEMBER_NAME BOARD_WRITER,
+		BOARD_CREATE_DATE,
+		BOARD_COUNT
+	FROM QNA_BOARD Q
+	JOIN MEMBER M ON Q.BOARD_WRITER = M.MEMBER_NO
+	WHERE Q.BOARD_STATUS = 'Y'
+	<if test="keyword != null and keyword != ''">
+  			AND 
+  			<choose>
+  				<when test="condition == 'title'">
+					BOARD_TITLE LIKE '%${keyword}%'
+				</when>
+				<when test="condition == 'content'">
+					BOARD_CONTENT LIKE '%${keyword}%'
+				</when>
+				<when test="condition =='titleAndContent'">
+					(BOARD_TITLE LIKE '%${keyword}%'
+					OR
+					BOARD_CONTENT LIKE '%${keyword}%')
+				</when>
+				<when test="condition == 'writer'">
+					MEMBER_NAME LIKE '%${keyword}%'
+				</when>
+  			</choose>
+  		</if>
+  		ORDER BY Q.BOARD_NO DESC
+</select>
+
+<!-- 페이징 처리를 위한 공지사항 리스트 갯수 불러오기 -->
+  	<select id="selectListCount" parameterType="hashmap" resultType="int">
+  		SELECT 
+  			COUNT(*)
+  		FROM QNA_BOARD Q
+  		JOIN MEMBER M ON Q.BOARD_WRITER = M.MEMBER_NO
+  		WHERE Q.BOARD_STATUS = 'Y' 
+  		<if test="keyword != null and keyword != ''">
+  			AND 
+  			<choose>
+  				<when test="condition == 'title'">
+					BOARD_TITLE LIKE '%${keyword}%'
+				</when>
+				<when test="condition == 'content'">
+					BOARD_CONTENT LIKE '%${keyword}%'
+				</when>
+				<when test="condition =='titleAndContent'">
+					(BOARD_TITLE LIKE '%${keyword}%'
+					OR
+					BOARD_CONTENT LIKE '%${keyword}%')
+				</when>
+				<when test="condition == 'writer'">
+					MEMBER_NAME LIKE '%${keyword}%'
+				</when>
+  			</choose>
+  		</if>
+  		ORDER BY Q.BOARD_NO DESC
+  	</select>
+
+	<insert id="insertQna" parameterType="qna" useGeneratedKeys="true">
+		<selectKey keyProperty="boardNo" resultType="int" order="BEFORE">
+			SELECT SEQ_BN.NEXTVAL FROM DUAL
+		</selectKey>
+		INSERT INTO QNA_BOARD
+		(
+			BOARD_NO,
+			BOARD_TITLE,
+			BOARD_WRITER,
+			BOARD_CONTENT
+		) VALUES(
+			#{boardNo},
+			#{boardTitle},
+			#{boardWriter},
+			#{boardContent}	
+		)
+	</insert> 
+
+	<resultMap type="qnaExt" id="qnaDetailResultSet">
+		<id column="BOARD_NO" property="boardNo"/>
+		<result column="BOARD_TITLE" property="boardTitle"/>
+		<result column="BOARD_CONTENT" property="boardContent"/>
+		<result column="BOARD_WRITER" property="boardWriter"/>
+		<result column="BOARD_COUNT" property="boardCount"/>
+		<result column="BOARD_CREATE_DATE" property="boardCreateDate"/>
+		<result column="BOARD_STATUS" property="boardStatus"/>
+		
+		<collection property="replyList" ofType="reply" javaType="java.util.List"
+   					select="selectReplyList" column="BOARD_NO"/>
+	</resultMap>
+
+   <resultMap type="reply" id="replyResultSet">
+	   	<id column="REPLY_NO" property="replyNo"/>
+	   	<result column="REPLY_CONTENT" property="replyContent"/>
+	   	<result column="REF_BNO" property="refBno"/>
+	   	<result column="REPLY_WRITER" property="replyWriter"/>
+	   	<result column="REPLY_CREATE_DATE" property="replyCreateDate"/>
+   </resultMap>
+
+
+
+	<select id="selectQna" parameterType="int" resultMap="qnaDetailResultSet">
+		SELECT 
+			BOARD_NO,
+			BOARD_TITLE,
+			MEMBER_ID BOARD_WRITER,
+			BOARD_CONTENT,
+			BOARD_CREATE_DATE,
+			BOARD_COUNT
+		FROM QNA_BOARD Q
+		JOIN MEMBER M ON MEMBER_NO = BOARD_WRITER
+		WHERE BOARD_NO = #{boardNo}
+	</select>
+
+	<update id="increaseCount" parameterType="int">
+   		UPDATE QNA_BOARD
+   		   SET BOARD_COUNT = BOARD_COUNT + 1
+   		WHERE BOARD_NO = #{boardNo}
+   </update>
+   
+   <update id="updateQna" parameterType="qna" >
+   		UPDATE QNA_BOARD SET
+   		 	BOARD_TITLE = #{boardTitle},
+   		 	BOARD_CONTENT = #{boardContent},
+   		 	BOARD_WRITER = #{boardWriter}
+   		WHERE BOARD_NO = #{boardNo}
+   		 	
+   </update>
+	
+	<!-- 댓글 작성 -->
+	<insert id="insertReply" parameterType="reply">
+   		INSERT INTO REPLY(
+   			REPLY_NO,
+   			REPLY_CONTENT,
+   			REF_BNO,
+   			REPLY_WRITER
+   		)VALUES(
+   			SEQ_RNO.NEXTVAL,
+   			#{replyContent},
+   			#{refBno},
+   			#{replyWriter}
+   		)
+   </insert>
+   
+   
+   <!-- 댓글 조회 -->
+   <select id="selectReplyList" resultMap="replyResultSet" parameterType="int">
+   		SELECT 
+   			REPLY_NO,
+   			REPLY_CONTENT,
+   			REF_BNO,
+   			MEMBER_ID REPLY_WRITER,
+   			REPLY_CREATE_DATE,
+   			REPLY_STATUS
+   		FROM REPLY R
+   		JOIN MEMBER M ON R.REPLY_WRITER = M.MEMBER_NO
+   		WHERE REF_BNO = #{bno}
+   		  AND R.REPLY_STATUS = 'Y'
+   </select>
+   
+   <!-- 댓글 수정  -->
+   <update id="updateReply" parameterType="Reply">
+   		UPDATE REPLY SET
+   			REPLY_CONTENT = #{replyContent}
+   	    WHERE REPLY_NO = #{replyNo}
+   </update>
+   
+   <!-- 댓글 삭제 -->
+   <delete id="deleteReply" parameterType="int">
+   		DELETE FROM REPLY
+   		WHERE REPLY_NO = #{replyNo}
+   </delete>
+   
+   <!-- Qna 삭제 -->
+	<delete id="deleteQna" parameterType="int">
+		DELETE FROM QNA_BOARD
+	    WHERE BOARD_NO = #{boardNo}
+	</delete>
+	
+	<!-- 리스트에서 qna 선택 삭제 -->
+	<delete id="deleteQnaList" parameterType="String">
+		DELETE FROM QNA_BOARD
+		WHERE BOARD_NO = #{no}
+	</delete>
+	
+	<delete id="deleteShopReply" parameterType="int">
+		DELETE FROM REPLY
+		WHERE REPLY_WRITER = #{memberNo}
+	</delete>
+
+	
+
+
+
+
+</mapper>

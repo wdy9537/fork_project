@@ -1,0 +1,770 @@
+@import url(http://fonts.googleapis.com/earlyaccess/notosanskr.css);
+
+body, table, th, td, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6,
+   pre, form, fieldset, textarea, blockquote, span, * {
+    /* font-family: 'Noto Sans KR', sans-serif; */
+    font-family: 'TheJamsil5Bold';
+    color:white;
+}
+
+@font-face {
+    font-family: 'TheJamsil5Bold';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2302_01@1.0/TheJamsil5Bold.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+}
+
+/* 버튼 효과 만들기 */
+/* button {
+    border-radius: 5px;
+    background-color: #eee;
+    cursor: pointer;
+    border:none;
+    box-shadow: 1px 3px 4px rgb(0, 0, 0, 0.3);
+} */
+/* button:active {
+    box-shadow: 1px 1px 0 rgb(0, 0, 0, 0.1);
+    position: relative;
+    top: 2px;
+} */
+
+.int{
+    border-radius: 5px;
+    /* background-color: #eee; */
+    cursor: pointer;
+    border:none;
+    width: 10%;
+    box-shadow: 1px 3px 4px rgb(0, 0, 0, 0.3);
+}
+
+.int:active{
+    box-shadow: 1px 1px 0 rgb(0, 0, 0, 0.1);
+    position: relative;
+    top: 2px;
+}
+
+/* 장바구니 영수증 만들기 */
+.int-header{
+    height:55%;
+}
+
+/* 닫기 버튼 */
+.close{
+    border:none;
+    border-radius: 100%;
+    background-color:  white;
+    width:fit-content;
+    height:fit-content;
+    margin:0;
+    padding:0;
+}
+
+.close>img{
+    width:10%;
+}
+
+.main-wrap {
+    width: 100%;
+    height: 100vh;
+}
+
+
+.header-wrap {
+    width: 100%;
+    height: 15%;
+    margin: auto 0;
+}
+
+.header-content {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    background-color: rgb(22, 22, 22);
+}
+
+.header-logo-wrap {
+    width: 15%;
+    height: 50%;
+    display: flex;
+    justify-content: center;
+}
+
+#header-logo {
+    width: 60%;
+    height: auto;
+}
+
+.header-utils {
+    height: 100%;
+    width: 20%;
+    display: flex;
+    margin-left: auto;
+    justify-content: space-between;
+    position: relative;
+}
+
+.category {
+    width: auto;
+    height: 10%;
+    margin : 3%;
+}
+
+.category>a{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    font-size: 3vh;
+}
+
+.category>a:hover{
+    background-color: rgb(255, 107, 27);
+    cursor:pointer;
+}
+
+/* width: 100%;
+height: 100%;
+display: flex;
+justify-content: center;
+align-items: center; */
+
+.ding-dong {
+    position: absolute;
+    width: 100%;
+    height: 10%;
+    bottom: 5%;
+}
+
+.ding-dong button {
+    width: 80%;
+    height: 100%;
+    text-align: center;
+    background-color: rgb(255, 107, 27);
+    border: none;
+    color: white;
+    font-size: 3vh;
+    font-weight: 600;
+}
+
+.body-wrap {
+    height: 85%;
+    display: flex;
+    text-align: center;
+    position: relative;
+}
+
+.container{
+    margin: 0;
+    padding: 0;
+}
+
+.category-wrap {
+    height: 100%;
+    width: auto;
+    display: contents;
+}
+
+.detail-category, .receipt-header {
+    display: flex;
+    height: 100%;
+    width: fit-content;
+    margin: 1%;
+    align-items: center;
+}
+
+.detail-category>a,.receipt-header>a, .cart-header>a{
+    width: 100%;
+    height: 90%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    font-size: 3vh;
+}
+
+.header-content a:hover{
+    background-color: rgb(255, 107, 27);
+}
+
+.left-nav-wrap {
+    width: 15%;
+    height: 100%;
+    background-color: rgb(22, 22, 22);
+    position: relative;
+}
+
+.content-wrap {
+    height: 100%;
+    width: 85%;
+    background-color: rgba(8, 6, 6, 0.871);
+}
+
+a:hover{
+    color: white;
+    cursor:pointer;
+}
+
+.receipt-wrap {
+    position: absolute;
+    right: 0vw;
+    width: 30%;
+    height: 100%;
+    background-color: rgb(255, 107, 27);
+    padding: 1.5%;
+    overflow-y: scroll;
+    display: none;
+    z-index: 2;
+}
+
+.receipt-view {
+    height: 25%;
+    width: 100%;
+    position: relative;
+    margin-bottom: 10%;
+    border: 1px solid rgb(22, 22, 22);
+    border-radius: 20px;
+    background-color: white;
+}
+
+.receipt-view-head {
+    position: relative;
+    height: 35%;
+
+}
+
+.receipt-view-head:after {
+    content: "";
+    display: block;
+    width: 90%;
+    border-bottom: 1px solid lightgray;
+    margin: 0 auto;
+}
+
+/*  receipt 수정해보자그  */
+.receipt-view-head-controll {
+    position: relative;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.receipt-view-head-controll div {
+    position: absolute;
+    right: 43%;
+    color:black;
+}
+
+.receipt-view-head-controll button {
+    margin-left: 74%;
+    height: 70%;
+    width: 20%;
+    font-size: 1vw;
+    color:black;
+}
+
+.receipt-view-body {
+    position: absolute;
+    height: 65%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.receipt-view-body span{
+    color:black;
+}
+
+.cart-wrap {
+    position: absolute;
+    right: 0vw;
+    width: 30%;
+    height: 100%;
+    background-color: rgb(255, 107, 27);
+    display: none;
+    padding: 1%;
+    z-index: 2;
+    overflow-y:scroll;
+}
+
+.cart-view {
+    position: relative;
+    width: 100%;
+    overflow-y: scroll;
+}
+
+.cart-header {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.cart-header-wrap {
+    height: 100%;
+    width: 100%;
+}
+
+/* 장바구니 내부 수정사항 추후 병합 필요*/
+
+.cart-order-wrap {
+    display: flex;
+    margin-bottom: 3%;
+    
+}
+
+.cart-menu-pic {
+    width: 40%;
+    /* background-image: url(); */
+}
+
+.cart-menu-pic img {
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+}
+
+.cart-menu-details {
+    margin: 2%;
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.cart-menu-details div {
+    margin: 2%;
+    position: relative;
+    width: 100%;
+    height: auto;
+    display: flex;
+}
+
+.cart-menu-details *{
+    color:black;
+}
+
+.cart-menu-name {
+    font-size: large;
+    font-weight: 500;
+}
+
+.cart-menu-name-1{
+   width: 55%; 
+    text-align: left;
+}
+
+.cart-menu-name-2{
+   width: 40%;
+}
+
+.cart-menu-option {
+    white-space: normal;
+    line-height: 1.0;
+    max-height: 3.em;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    text-overflow: ellipsis;
+}
+
+.cart-menu-option>div {
+    color: rgb(22, 22, 22);
+}
+
+.cart-menu-delete {
+    margin-left: 11%;
+    height:fit-content;
+    width: fit-content;
+    font-size: 1vw;
+}
+
+/* 주문하기 버튼버튼 */
+.cart-order {
+    position: absolute;
+    bottom: 2%;
+    width: 95%;
+    height: 10%;
+    background-color: rgb(255, 107, 27);
+}
+
+.cart-order button {
+    position: relative;
+    width: 90%;
+    height: 100%;
+    /* background-color: bisque; */
+    border: none;
+    cursor: pointer;
+}
+
+.cart-form {
+    height: 90%;
+    overflow-y: scroll;
+}
+
+.count-wrap {
+    position: relative;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.inp {
+    width: 30%;
+}
+
+/* 장바구니 수정 사항 끝!  */
+
+/* 영수증증증 */
+.receipt-header {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.receipt-header-wrap {
+    height: 100%;
+    width: 100%;
+}
+
+
+
+/* ===========drag========== */
+
+
+
+
+
+
+
+/*========================= addClass할 내용들 ===========================*/
+/* 버튼도 같이 활성화 */
+.btn-focus {
+    top: 0;
+    z-index: 3;
+}
+
+/* 외부 그림자 */
+.emphasized {
+    box-shadow: rgba(0, 0, 0, 0.5) 0 0 0 9999px;
+    z-index: 2;
+}
+
+/* 클릭했을 때 영수증 모양 */
+
+.btn-focused {
+    background-color: rgb(255, 107, 27);
+    width: 100%;
+    height: 90%;
+    border-top-left-radius: 10%;
+    border-top-right-radius: 10%;
+    position: relative;
+    bottom: -10%;
+    cursor: pointer;
+    z-index: 3;
+}
+
+/* 대기화면 css */
+
+.full-screen {
+    position: absolute;
+    width: 100%;
+    height: 600px;
+    z-index: 1;
+    opacity: 0.9;
+    display: none;
+}
+
+/* .full-screen img{
+    
+} */
+
+
+/* receipt-detail 설정 설정  */
+
+.receipt-detail-header-wrap {
+    border: 1px solid rgb(22, 22, 22);
+    background-color: azure;
+    width: 100%;
+    height: 100%;
+    overflow-y: hidden;
+    position: relative;
+    padding: 2%;
+    display: none;
+}
+
+.receipt-detail-header-wrap div, span{
+    color : black;
+}
+
+.receipt-detail-top {
+    height: auto;
+    width: 100%;
+    display: contents;
+}
+
+.receipt-detail-top-1 {
+    justify-content: space-between;
+    display: flex;
+    width: 60%;
+    margin-left: auto;
+    padding-bottom: 3%;
+}
+
+.receipt-detail-top-1>div {
+    font-weight: 600;
+    font-size: x-large;
+    padding-right: 3%;
+}
+
+.receipt-detail-top-2 {
+    padding-bottom: 3%;
+}
+
+.receipt-detail-top-2 {
+    width: 93%;
+    border-bottom: 1px solid lightgray;
+    margin: 0 auto;
+}
+
+.receipt-detail-top-2>div {
+    display: flex;
+    font-size: 85%;
+}
+
+.receipt-detail-top-2-1 {
+    display: flex;
+    position: absolute;
+    right: 5%;
+}
+
+.receipt-detail-mid {
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    padding: 3% 0 3% 0;
+}
+
+.receipt-detail-mid {
+    width: 93%;
+    border-bottom: 1px solid lightgray;
+    margin: 0 auto;
+}
+
+.receipt-detail-mid-1 {
+    display: flex;
+    font-weight: 500;
+    font-size: 90%;
+}
+
+.receipt-detail-mid-1 :nth-child(1) {
+    flex: 1.2 1 0;
+}
+
+.receipt-detail-mid-1 :nth-child(2) {
+    flex: 0.8 1 0;
+}
+
+.receipt-detail-mid-1 :nth-child(3) {
+    flex: 0.4 1 0;
+}
+
+.receipt-detail-mid-1 :nth-child(4) {
+    flex: 0.7 1 0;
+}
+
+.receipt-detail-mid-2 {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    font-size: 85%;
+}
+
+.receipt-detail-mid-2>div {
+    justify-content: space-between;
+    display: flex;
+    width: 100%;
+    margin-left: auto;
+}
+
+.receipt-deail-mid-2-1 div:nth-child(1) {
+    flex: 1.2 1 0;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.receipt-deail-mid-2-1 div:nth-child(2) {
+    flex: 0.8 1 0;
+}
+
+.receipt-deail-mid-2-1 div:nth-child(3) {
+    flex: 0.3 1 0;
+}
+
+.receipt-deail-mid-2-1 div:nth-child(4) {
+    flex: 0.7 1 0;
+    text-align: end;
+}
+
+/* 수정!!!!!!!! */
+
+.receipt-deail-mid-2-2 div {
+    width: 100%;
+    margin-left: 3%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: darkgray;
+    font-size: 95%;
+}
+
+.receipt-detail-last-1 {
+    width: 93%;
+    border-bottom: 1px solid lightgray;
+    margin: 0 auto;
+    padding: 3% 0 3% 0;
+}
+
+.receipt-detail-last-1>div {
+    display: flex;
+    width: 100%;
+    font-size: 100%;
+    font-weight: 500;
+}
+
+.receipt-detail-last-1-1 :nth-child(1) {
+    flex: 1;
+    text-align: left;
+}
+
+.receipt-detail-last-1-1 :nth-child(2) {
+    flex: 1;
+    text-align: right;
+}
+
+.receipt-detail-last-2 {
+    width: 93%;
+    border-bottom: 1px solid lightgray;
+    margin: 0 auto;
+    padding: 3% 0 3% 0;
+}
+
+.receipt-detail-last-2-1 {
+    display: flex;
+    width: 100%;
+    font-size: 85%;
+    font-weight: 500;
+}
+
+.receipt-detail-last-2-1 :nth-child(1) {
+    flex: 1;
+    text-align: left;
+}
+
+.receipt-detail-last-2-1 :nth-child(2) {
+    flex: 1;
+    text-align: right;
+}
+
+.receipt-detail-last-3 {
+    display: flex;
+    width: 100%;
+    padding: 3% 3% 3% 3%;
+    font-size: 125%;
+    font-weight: 500;
+}
+
+.receipt-detail-last-3 :nth-child(1) {
+    flex: 1;
+    text-align: left;
+}
+
+.receipt-detail-last-3 :nth-child(2) {
+    flex: 1;
+    text-align: right;
+}
+
+.information{
+    text-align:center !important;
+}
+
+.cart-menu-option{
+    flex-direction: column;
+}
+
+.count-wrap>input{
+    text-align:center;
+}
+
+.cartview-total-price{
+    font-size: x-large;
+    font-weight:600;
+}
+
+#flag {
+    width: 7%;
+    height: 70%;
+    box-sizing: content-box;
+    margin-bottom: auto;
+    padding-top: 15px;
+    position: relative;
+    background: darkred;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-align: center;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    letter-spacing:1px;
+    font-size: 2vw;
+  }
+  #flag:after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 0;
+    height: 0;
+    border-bottom: 2vh solid rgb(22, 22, 22);
+    border-left: 3.7vw solid transparent;
+    border-right: 3.7vw solid transparent;
+  }
+
+  .dutchPrice-table{
+    width:100%;
+  }
+
+  .dutchPrice-body{
+    width:100%;
+  }
+
+  .dutchPrice-tr{
+    width:100%;
+    display: flex;
+  }
+
+  .inputValueTotalPrice{
+    display: flex;
+    margin-left:auto;
+  }

@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="noticeMapper">
+	
+	<resultMap type="notice" id="noticeResultSet">
+		<id column="NOTICE_NO" property="noticeNo"/>
+		<result column="NOTICE_TITLE" property="noticeTitle"/>
+		<result column="NOTICE_CONTENT" property="noticeContent"/>
+		<result column="NOTICE_WRITER" property="noticeWriter"/>
+		<result column="NOTICE_COUNT" property="noticeCount"/>
+		<result column="NOTICE_CREATE_DATE" property="noticeCreateDate"/>
+		<result column="NOTICE_STATUS" property="noticeStatus"/>	
+	</resultMap>
+  	
+  	
+  	<!-- 공지사항 리스트 불러오기 -->
+  	<select id="selectList" parameterType="string" resultMap="noticeResultSet">
+  		SELECT 
+  			NOTICE_NO,
+  			NOTICE_TITLE,
+  			MEMBER_NAME AS NOTICE_WRITER,
+  			NOTICE_CREATE_DATE,
+  			NOTICE_COUNT
+  		FROM NOTICE N
+  		JOIN MEMBER M ON N.NOTICE_WRITER = M.MEMBER_NO
+  		WHERE N.NOTICE_STATUS = 'Y' 
+  		<if test="keyword != null and keyword != ''">
+  			AND 
+  			<choose>
+  				<when test="condition == 'title'">
+					NOTICE_TITLE LIKE '%${keyword}%'
+				</when>
+				<when test="condition == 'content'">
+					NOTICE_CONTENT LIKE '%${keyword}%'
+				</when>
+				<when test="condition =='titleAndContent'">
+					(NOTICE_TITLE LIKE '%${keyword}%'
+					OR
+					NOTICE_CONTENT LIKE '%${keyword}%')
+				</when>
+				<when test="condition == 'writer'">
+					MEMBER_NAME LIKE '%${keyword}%'
+				</when>
+  			</choose>
+  		</if>
+  		ORDER BY N.NOTICE_NO DESC
+  	</select>
+  	
+  	
+  	<!-- 페이징 처리를 위한 공지사항 리스트 갯수 불러오기 -->
+  	<select id="selectListCount" parameterType="hashmap" resultType="int">
+  		SELECT 
+  			COUNT(*)
+  		FROM NOTICE N
+  		JOIN MEMBER M ON N.NOTICE_WRITER = M.MEMBER_NO
+  		WHERE N.NOTICE_STATUS = 'Y' 
+  		<if test="keyword != null and keyword != ''">
+  			AND 
+  			<choose>
+  				<when test="condition == 'title'">
+					NOTICE_TITLE LIKE '%${keyword}%'
+				</when>
+				<when test="condition == 'content'">
+					NOTICE_CONTENT LIKE '%${keyword}%'
+				</when>
+				<when test="condition =='titleAndContent'">
+					(NOTICE_TITLE LIKE '%${keyword}%'
+					OR
+					NOTICE_CONTENT LIKE '%${keyword}%')
+				</when>
+				<when test="condition == 'writer'">
+					MEMBER_NAME LIKE '%${keyword}%'
+				</when>
+  			</choose>
+  		</if>
+  		ORDER BY N.NOTICE_NO DESC
+  	</select>
+  	
+  	
+  	<!-- 공지사항 작성 -->
+	<insert id="insertNotice" parameterType="notice" useGeneratedKeys="true">
+		<selectKey keyProperty="noticeNo" resultType="int" order="BEFORE">
+			SELECT SEQ_NN.NEXTVAL FROM DUAL
+		</selectKey>
+		INSERT INTO NOTICE
+		(
+			NOTICE_NO,
+			NOTICE_TITLE,
+			NOTICE_WRITER,
+			NOTICE_CONTENT
+		) VALUES(
+			#{noticeNo},
+			#{noticeTitle},
+			#{noticeWriter},
+			#{noticeContent}	
+		)
+	</insert>  	
+  	
+  	<!-- 첨부파일 등록 -->
+   	<insert id="insertAttachmentList" parameterType="list">
+  		INSERT INTO NOTICE_ATTACH(
+  			FA_NO,
+  			FA_ORIGIN_NAME,
+  			FA_CHANGE_NAME,
+  			REF_NNO,
+  			FA_PATH,
+  			FA_UPLOAD_DATE,
+  			FA_STATUS
+  		)
+  		SELECT SEQ_FAN.NEXTVAL AS FA_NO, C.* FROM
+  		(
+  			<foreach collection="list" item="attach" separator="UNION ALL">
+	            SELECT 
+	               #{attach.faOriginName} as ORIGIN_NAME,
+	               #{attach.faChangeName} as CHANGE_NAME,
+	               #{attach.refNno} as REF_NNO,
+	               #{attach.faPath} as FILE_PATH,
+	               SYSDATE as FA_UPLOAD_DATE,
+	               'Y' as FA_STATUS
+	            FROM DUAL
+         	</foreach>	
+  		
+  		) C	 
+  	</insert> 
+  	
+  	
+  	<resultMap type="noticeExt" id="noticeDetailResultSet">
+		<id column="NOTICE_NO" property="noticeNo"/>
+		<result column="NOTICE_TITLE" property="noticeTitle"/>
+		<result column="NOTICE_CONTENT" property="noticeContent"/>
+		<result column="NOTICE_WRITER" property="noticeWriter"/>
+		<result column="NOTICE_COUNT" property="noticeCount"/>
+		<result column="NOTICE_CREATE_DATE" property="noticeCreateDate"/>
+		<result column="NOTICE_STATUS" property="noticeStatus"/>
+		
+		<collection property="attachList" ofType="attachment" javaType="java.util.List"
+   					resultMap="attachmentResultSet"/>	
+	</resultMap>
+	
+	<resultMap type="attachment" id="attachmentResultSet">
+   		<id column="FA_NO" property="faNo"/>
+		<result column="REF_NNO" property="refNno"/>
+		<result column="FA_ORIGIN_NAME" property="faOriginName"/>
+		<result column="FA_CHANGE_NAME" property="faChangeName"/>
+		<result column="FA_PATH" property="faPath"/>
+		<result column="FA_UPLOAD_DATE" property="faUploadDate"/>
+		<result column="FA_STATUS" property="faStatus"/>
+   </resultMap>
+   
+	
+	
+	<!-- 공지사항 상세보기  -->
+  	<select id="selectNotice" parameterType="int" resultMap="noticeDetailResultSet" >
+  		SELECT 
+  			NOTICE_NO,
+  			NOTICE_TITLE,
+  			MEMBER_ID NOTICE_WRITER,
+  			NOTICE_CONTENT,
+  			NOTICE_CREATE_DATE,
+  			NOTICE_COUNT,
+  			AT.*
+  		FROM NOTICE N
+  		LEFT JOIN NOTICE_ATTACH AT ON NOTICE_NO = REF_NNO
+  		JOIN MEMBER M ON MEMBER_NO = NOTICE_WRITER
+  		WHERE NOTICE_NO = ${noticeNo}	
+  	</select>
+  	
+  	<!-- 조회수 증가 -->
+  	<update id="increaseCount" parameterType="int">
+   		UPDATE NOTICE
+   		   SET NOTICE_COUNT = NOTICE_COUNT + 1
+   		WHERE NOTICE_NO = #{noticeNo}
+   </update>
+  	
+  	<!-- 파일다운 -->
+  	<select id="selectAttachment" parameterType="int" resultMap="attachmentResultSet">
+   		SELECT * 
+   		  FROM NOTICE_ATTACH
+   		 WHERE FA_NO = #{faNo}
+   	</select>
+   	
+   	<!-- 공지사항 수정 -->
+   	<update id="updateNotice" parameterType="notice">
+   		UPDATE NOTICE SET
+   			NOTICE_TITLE = #{noticeTitle},
+   			NOTICE_CONTENT = #{noticeContent},
+   			NOTICE_WRITER = #{noticeWriter}
+   		WHERE NOTICE_NO = #{noticeNo}
+   	</update>
+   	
+   	
+   	<!-- 첨부파일 수정 -->
+	<update id="updateAttachment" parameterType="attachment">
+	    UPDATE ATTACHMENT SET
+	        FA_ORIGIN_NAME = #{faOriginName},
+	        FA_CHANGE_NAME = #{faChangeName},
+	        FA_PATH = #{faPath}
+	    WHERE NOTICE_NO = #{noticeNo}
+	</update>
+   	
+   <!-- 첨부파일 등록 -->
+   <insert id="insertAttachment" parameterType="attachment">
+   	INSERT INTO ATTACHMENT(
+   		FA_NO,
+   		REF_NNO,
+   		FA_ORIGIN_NAME,
+   		FA_CHANGE_NAME,
+   		FA_PATH,
+   		FA_UPLOAD_DATE,
+   		FA_STATUS
+   	)VALUES(
+   		SEQ_FAN.NEXTVAL,
+   		#{faNo},
+   		#{faOriginName},
+   		#{faChangeName},
+   		#{faPath},
+   		SYSDATE,
+   		'Y'
+   	)
+   </insert>
+  	
+   	<!-- 첨부파일 삭제 -->
+   	<delete id="deleteAttachment" parameterType="map">
+   		DELETE FROM NOTICE_ATTACH
+   		WHERE REF_NNO = #{noticeNo}
+   	</delete>
+   	
+   	<delete id="deleteNotice" parameterType="int">
+	    DELETE FROM NOTICE
+	    WHERE NOTICE_NO = #{noticeNo}
+	</delete>
+  	
+  	<select id="selectAttachmentsByNoticeNo" parameterType="int" resultMap="attachmentResultSet">
+  		SELECT * FROM NOTICE_ATTACH
+  		WHERE REF_NNO = #{noticeNo}
+  	</select>
+  	
+	<delete id="deleteNoticeList" parameterType="String">
+	    DELETE FROM NOTICE
+	    WHERE NOTICE_NO = #{no}
+	    
+	</delete>
+  	
+</mapper>

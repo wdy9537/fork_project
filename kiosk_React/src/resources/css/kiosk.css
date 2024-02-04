@@ -1,0 +1,471 @@
+/* 동연시작 */
+* {
+    box-sizing: border-box;
+}
+
+a {
+    text-decoration: none;
+    color: white;
+}
+
+.content-wrap {
+    width: 100%;
+    height: 100%;
+    overflow-y: scroll;
+}
+
+.main-content {
+    width: 100%;
+    height: 100%;
+}
+
+.main-content-dutchpay {
+    width: 100%;
+    height: 100%;
+}
+
+.main-content-detail-category {
+    text-align: left;
+    font-size: 5vh;
+    font-weight: bold;
+    padding-left: 3%;
+    display: block;
+    margin-top: 1rem;
+}
+
+.main-content-menu a {
+    list-style: none;
+    float: left;
+    border: none;
+    text-decoration: none;
+}
+
+.main-content-menu ul {
+    list-style: none;
+    width: 33%;
+}
+
+.main-content-menu li {
+    padding: 1% 0% 1% 0%;
+    font-size: 4vh;
+    background-color: rgba(8, 6, 6, 0.212);
+}
+
+.main-content-menu ul li img {
+    width: 70%;
+    height: 70%;
+    border-radius: 20px;
+}
+
+.main-content-menu ul:hover {
+    color: white;
+}
+
+.menu-list {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 1%;
+}
+
+.page-head {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    height: 20%;
+}
+
+.page-head:after {
+    content: "";
+    width: 95%;
+    border-bottom: 1px solid darkgray;
+    margin: 0 auto;
+    height: 0;
+}
+
+.page-head-title p {
+    display: inline-block;
+}
+
+.page-head-title {
+    width: 20%;
+}
+
+.page-head-button {
+    width: 80%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.page-head-button button {
+    height: 50%;
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-right: 3%;
+    font-size: 2.5vh;
+}
+
+.detailmenu-content {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.detailmenu-content-left {
+    width: 50%;
+    height: auto;
+}
+
+.detailmenu-content-left img {
+    width: 70%;
+    margin-top: 3%;
+    border-radius: 20px;
+}
+
+.detailmenu-content-left ul {
+    text-align: center;
+    padding-left: 0;
+}
+
+.detailmenu-content-left li {
+    width: 70%;
+    list-style: none;
+    text-align: left;
+    margin-bottom: 1%;
+    margin-top: 1%;
+    font-size: 4vh;
+    display: inline-block;
+}
+
+.detailmenu-menuname {
+    height: auto;
+}
+
+.detailmenu-option {
+    height: auto;
+}
+
+.detailmenu-option-list {
+    height: auto;
+}
+
+.detailmenu-content-right ul {
+    text-align: left;
+    padding-left: 0;
+}
+
+.detailmenu-content-right li {
+    list-style: none;
+    font-size: 5vh;
+    font-weight: bold;
+    margin-bottom: 1%;
+}
+
+.detailmenu-content-right {
+    width: 50%;
+}
+
+.detailmenu-option-list table {
+    width: 80%;
+    text-align: left;
+    font-size: 3vh;
+    border-spacing: 0 10px;
+}
+
+.detailmenu-option-list th,
+.detailmenu-option-list td {
+    border-bottom: 1px dotted black;
+}
+
+.detailmenu-option-list tr td:nth-child(2), .detailmenu-option-list tr td:nth-child(3) {
+    text-align: right;
+}
+
+.detailmenu-option-list select {
+    font-size: 20px;
+}
+
+.detailmenu-option-button {
+    text-align: right;
+}
+
+.detailmenu-option-button button {
+    margin-right: 3%;
+}
+
+.dutchpay-button {
+    width: 60%;
+    display: flex;
+    justify-content: end;
+}
+
+.dutchpay-button button {
+    height: 50%;
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-right: 3%;
+    font-size: 3vh;
+}
+
+.dutchpay-head-title {
+    width: 40%;	
+    text-align: left;
+    font-size: 5vh;
+    font-weight: bold;
+    padding-left: 3%;
+    display: block;
+    margin-top: 1rem;
+}
+
+.pay-list {
+    height: 90%;
+}
+
+.pay-list ul {
+    padding-left: 0;
+}
+
+.pay-list ul li {
+    list-style: none;
+    background-color: rgba(8, 6, 6, 0.212);
+    position: relative;
+}
+
+.pay-list ul {
+    list-style: none;
+    width: 20%;
+    float: left;
+    /* border: 1px solid blue; */
+    border: none;
+    /* background-color: aliceblue; */
+    margin-left: 2.5%;
+    margin-right: 2.5%;
+    height: 40%;
+}
+
+.pay-list li {
+    padding: 1% 0% 1% 0%;
+    font-size: 3.5vh;
+    height: 33%;
+}
+
+.pay-list li button {
+    width: 45%;
+    height: 80%;
+    font-size: 2vh;
+}
+
+.pay-list ul li img {
+    width: 100px;
+    height: 100px;
+    border-radius: 20px;
+}
+
+.pay-list ul li table {
+    width: 100%;
+    border-bottom: 1px solid black;
+    border-collapse: collapse;
+}
+
+.pay-list ul li th {
+    text-align: center;
+    width: 50%;
+}
+
+.pay-list ul li td {
+    line-height: 10%;
+    text-align: right;
+    padding-right: 8%;
+}
+
+.pay-list input {
+    height: 100%;
+    width: 70%;
+    height: auto;
+    font-size: 20px;
+    color: black;
+    text-align: right;
+}
+
+.dutchpayByPrice-content {
+    height: 80%;
+    width: 100%;
+}
+
+.dutchpayByMenu-content {
+    width: 100%;
+}
+
+.totalPrice {
+    height: 10%;
+    font-size: 5vh;
+    text-align: left;
+    padding-left: 3%;
+    margin-bottom: 3%;
+}
+
+.modal-content {
+    background-color: black;
+}
+
+.modal-header {
+    justify-content: center;
+}
+
+.modal-body {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+}
+
+.modal-body td,
+.modal-body th {
+    border: 1px solid white;
+}
+
+.modal-body table {
+    width: 80%;
+}
+
+.selectPayModal {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.selectPayModal ul {
+    list-style: none;
+    width: 33%;
+}
+
+.selectPayModal ul img {
+    width: 70%;
+    height: 70%;
+    border-radius: 20px;
+}
+
+.selectPayModal li {
+    padding: 5% 0% 1% 0%;
+    font-size: 4vh;
+}
+
+.selectPayModal2 {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.selectPayModal2 ul {
+    list-style: none;
+    width: 33%;
+}
+
+.selectPayModal2 ul img {
+    width: 70%;
+    height: 70%;
+    border-radius: 20px;
+}
+
+.selectPayModal2 li {
+    padding: 5% 0% 1% 0%;
+    font-size: 4vh;
+}
+
+.dropdownbtn {
+    z-index: 1;
+}
+
+/* 슬라이딩 애니메이션 */
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+    }
+
+    to {
+        transform: translateX(0);
+    }
+}
+
+/* 슬라이딩 아웃 애니메이션 */
+@keyframes slideOut {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(-100%);
+    }
+}
+
+.screenContainer{
+    width: 100%;
+    height: 100vw;
+    overflow: hidden;
+    position: relative;
+}
+
+.screen {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    animation-duration: 1s;
+    animation-timing-function: ease-in-out;
+    animation-fill-mode: both;
+}
+
+#standByScreen img {
+    width: 100%;
+    height: 100vh;
+}
+
+.slide-in {
+    animation-name: slideIn;
+}
+
+.slide-out {
+    animation-name: slideOut;
+}
+
+.userAddLi {
+    height: 100% !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.userAddBtn{
+    height: auto !important;
+    width: auto !important;
+    background-color: transparent;
+}
+
+.userAddBtn {
+    border-radius: 5px;
+    cursor: pointer;
+    border:none;
+    box-shadow: 1px 3px 4px rgb(0, 0, 0, 0.3);
+}
+
+.userAddBtn:active {
+    box-shadow: 1px 1px 0 rgb(0, 0, 0, 0.1);
+    position: relative;
+    top: 2px;
+}
+
+.closeBtn{
+    width: 20% !important;
+    height: fit-content !important;
+}
+
+.cardPayWrap{
+    display: flex;
+    flex-direction: column;
+}
+
+.numPad{
+    position: absolute;
+    width: 10% !important;
+    height: 55% !important;
+    top: 11%;
+}
+
+#paidUlInDutch li:nth-child(1), #paidUlInDutch li:nth-child(2){
+    opacity: 0.5;
+}

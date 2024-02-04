@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="chartMapper">
+
+    <resultMap id="chartResultSet" type="Chart">
+        <result column="PAY_DATE" property="payDate" />
+        <result column="PRICE" property="price" />
+        <result column="MENU_NO" property="menuNo" />
+        <result column="MENU_NAME" property="menuName" />
+        <result column="COUNT" property="count" />
+    </resultMap>
+    
+    <select id="loadChart" resultMap="chartResultSet" parameterType="hashmap">
+        SELECT TO_CHAR(PAY_DATE, 'YYYY-MM-DD') PAY_DATE, SUM(PRICE) PRICE
+		FROM PAY
+		GROUP BY TO_CHAR(PAY_DATE, 'YYYY-MM-DD')
+		HAVING TO_DATE(TO_CHAR(PAY_DATE, 'YYYY-MM-DD')) BETWEEN TO_DATE('${startDay}','YYYY-MM-DD') AND TO_DATE('${endDay}','YYYY-MM-DD')+1
+		ORDER BY PAY_DATE
+    </select>
+    
+    <select id="loadMenuChart" resultMap="chartResultSet" parameterType="hashmap">
+        SELECT MENU_NO, COUNT(MENU_NO) COUNT
+		FROM RECEIPT_MENU
+		JOIN MENU USING(MENU_NO)
+		JOIN RECEIPT USING (RECEIPT_NO)
+		JOIN PAY USING(PAY_NO)
+		JOIN CATEGORY USING(CATEGORY_NO)
+		WHERE PAY_DATE BETWEEN TO_DATE('${startDay}','YYYY-MM-DD') AND TO_DATE('${endDay}','YYYY-MM-DD')+1 AND PR_CATEGORY_NO = #{prCateNo}
+		GROUP BY MENU_NO
+    </select>
+    
+    <select id="loadMenuNameChart" resultType="string" parameterType="int">
+        SELECT MENU_NAME
+		FROM MENU
+		WHERE MENU_NO = #{menuNo}
+    </select>
+    
+    <resultMap id="categoryResultMap" type="ChartCategory">
+        <result column="CATEGORY_NO" property="categoryNo" />
+        <result column="CATEGORY_NAME" property="categoryName" />
+        <result column="PR_CATEGORY_NO" property="prCategoryNo" />
+    </resultMap>
+    
+    <select id="selectChartCategory" resultMap="categoryResultMap">
+    	SELECT *
+		FROM CATEGORY
+		WHERE PR_CATEGORY_NO = 0
+    </select>
+    
+    
+</mapper>

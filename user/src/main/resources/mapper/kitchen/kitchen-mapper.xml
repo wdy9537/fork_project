@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="kitchenMapper">
+
+	<resultMap type="payStructure" id="payStructureResultSet">
+	   <result column="TR_NO" property="trNo"/>
+	   <result column="PAY_DATE" property="payDate"/>
+	   <result column="STRUC_TITLE" property="strucTitle"/>
+	</resultMap>
+	
+	<select id="selectPaylist" resultMap="payStructureResultSet">
+		SELECT TR_NO, MAX(PAY_DATE) PAY_DATE, MAX(STRUC_TITLE) STRUC_TITLE
+		FROM TOTAL_RECEIPT
+		JOIN RECEIPT USING (TR_NO)
+		LEFT JOIN STRUCTURE USING (KIOSK_NO)
+		JOIN PAY USING (PAY_NO)
+		WHERE ORDER_STATUS = 'Y'
+		GROUP BY TR_NO
+		ORDER BY TR_NO DESC
+	</select>
+	
+	<resultMap type="MenuOption" id="menuOptResultSet">
+	   <result column="MENU_NAME" property="menuName"/>
+	   <result column="OPTION_NAME" property="optionName"/>
+	   <result column="CNT" property="cnt"/>
+	</resultMap>
+	
+	<select id="selectTotalMenulist" resultMap="menuOptResultSet">
+		SELECT 
+		    MAX(MENU_NAME) MENU_NAME, LISTAGG(option_name, ',') WITHIN GROUP (ORDER BY option_name)  OPTION_NAME, SUM(CNT) CNT
+		    
+		FROM
+		    TOTAL_RECEIPT   TR
+		    LEFT JOIN RECEIPT         R ON R.TR_NO = TR.TR_NO
+		    LEFT JOIN RECEIPT_MENU    RM ON RM.RECEIPT_NO = R.RECEIPT_NO
+		    LEFT JOIN MENU            M ON M.MENU_NO = RM.MENU_NO
+		    LEFT JOIN RECEIPT_OPTION  RO ON RO.RCM_NO = RM.RCM_NO
+		    LEFT JOIN OPT             O ON O.OPTION_NO = RO.OPTION_NO
+		    LEFT JOIN PAY             P ON P.PAY_NO = R.PAY_NO
+		    JOIN CATEGORY             C ON C.CATEGORY_NO = M.CATEGORY_NO
+		WHERE
+		        TR.TR_NO = #{no} AND NOT C.CATEGORY_NO IN (11, 15) AND NOT C.PR_CATEGORY_NO IN (11, 15)
+		    GROUP BY RM.MENU_NO
+	</select>
+	
+	<select id="selectMenulist" resultMap="menuOptResultSet">
+		SELECT 
+		    MAX(MENU_NAME) MENU_NAME, LISTAGG(option_name, ',') WITHIN GROUP (ORDER BY option_name)  OPTION_NAME, MAX(CNT) CNT
+		    
+		FROM
+		    TOTAL_RECEIPT   TR
+		    LEFT JOIN RECEIPT         R ON R.TR_NO = TR.TR_NO
+		    LEFT JOIN RECEIPT_MENU    RM ON RM.RECEIPT_NO = R.RECEIPT_NO
+		    LEFT JOIN MENU            M ON M.MENU_NO = RM.MENU_NO
+		    LEFT JOIN RECEIPT_OPTION  RO ON RO.RCM_NO = RM.RCM_NO
+		    LEFT JOIN OPT             O ON O.OPTION_NO = RO.OPTION_NO
+		    LEFT JOIN PAY             P ON P.PAY_NO = R.PAY_NO
+		    JOIN CATEGORY             C ON C.CATEGORY_NO = M.CATEGORY_NO
+		WHERE
+		        R.RECEIPT_NO = #{no} AND NOT C.CATEGORY_NO IN (11, 15) AND NOT C.PR_CATEGORY_NO IN (11, 15)
+		    GROUP BY P.PAY_NO, RM.MENU_NO 
+	</select>
+	
+	<select id="selectTableInfo" resultType="payStructure">
+		SELECT MAX(TR_NO) TR_NO, MAX(PAY_DATE) PAY_DATE, MAX(STRUC_TITLE) STRUC_TITLE
+		FROM TOTAL_RECEIPT
+		JOIN RECEIPT USING (TR_NO)
+		LEFT JOIN STRUCTURE USING (KIOSK_NO)
+		JOIN PAY USING (PAY_NO)
+		WHERE ORDER_STATUS = 'Y' AND KIOSK_NO = #{rno}
+        GROUP BY STRUC_TITLE
+	</select>
+</mapper>

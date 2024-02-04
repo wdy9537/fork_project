@@ -1,0 +1,96 @@
+ .chart_content { 
+    width: 1500px; 
+    height: 100%; 
+    margin: 0 auto;
+    margin-top: 80px;
+    padding-top: 40px;
+    position: relative;
+    overflow: hidden;
+}
+
+.statistics-bar{
+    display: flex;
+    justify-content: space-between;
+}
+.statistics-bar div{height: 50px; line-height: 47px;}
+.choice-title-btn, .choice-btn {
+    border: 3px solid orange;
+    border-radius: 14px;
+    padding: 0 12px;
+    font-size: 18px;
+    display: inline-block;
+}
+.choice-title-btn{
+    color: white;
+    background-color: orange;
+    
+}
+.choice-btn{
+    color: orange;
+    margin-left: 10px;
+    cursor: pointer;
+    box-shadow: 0 2px 0 -1px rgba(0,0,0,0.13);
+}
+.choice-btn:active{
+    position: relative;
+    top: 1px;
+    box-shadow: 0 1px 0 rgba(255,255,255,0.89),0 1px rgba(0,0,0,0.05) inset;
+}
+.choice-btn:hover{
+    background-color: antiquewhite;
+}
+
+.gray-bar{
+    background-color: lightgray;
+    border-radius: 14px;
+    display: inline-flex;
+}
+.between-day, .choice-type-title{
+    font-size: 18px;
+    padding: 0 12px;
+    border: 3px solid lightgray;
+    border-radius: 14px;
+}
+.between-day>input[type="date"] {
+    border: none;
+    position: relative;
+    text-align: center;
+    font-weight: bold;
+    background: transparent;
+}
+.between-day>input[type='date']::-webkit-calendar-picker-indicator {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    color: transparent;
+    cursor: pointer;
+}
+
+.statistics-content{
+	margin-top: 40px;
+	max-height: 95vh;
+	width: 100%;
+}
+
+.menu-chart {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: flex-start;
+}
+.menu-chart>div{
+	margin-bottom: 30px;
+}
+
+.chart-category-title{
+	font-size: 50px;
+	position: absolute;
+      top: 50%; left: 50%;
+      -webkit-transform: translate(-50%, -50%);
+      -moz-transform: translate(-50%, -50%);
+      -ms-transform: translate(-50%, -50%);
+      -o-transform: translate(-50%, -50%);
+      transform: translate(-50%, -50%); }
+}
