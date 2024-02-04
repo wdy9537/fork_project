@@ -6,13 +6,9 @@ import axios from 'axios';
 const LoginView = () => {
     const kioskNo = useReceiptStore((state) => state.kioskNo);
     const setKioskNo = useReceiptStore((state) => state.setKioskNo);
-   //const receiptList = useReceiptStore((state) => state.receiptList);
-    // const setReceiptList = useReceiptStore((state) => state.setReceiptList);
     const {setReceiptItems} = useReceiptStore();
     const [loginSuccess, setLoginSuccess] = useState(false);
     
-    //const {setIsLoggedIn} = prop;
-
     const handleLogin = (e) => {
         e.preventDefault();
         
@@ -20,16 +16,12 @@ const LoginView = () => {
 
         sessionStorage.setItem('isLoggedIn','true');
         sessionStorage.setItem('kioskNo',kioskNo);
-        // 로그인할 때 데이터 넘기게
+        // 로그인할 때 데이터 넘기기
         axios.post(`/kiosk/receipt/${kioskNo}`).then((response) => {
-            // 여기에 데이터?를? 담아줘?
-            console.log(11,response.data);
-            //setIsLoggedIn('true');
             sessionStorage.setItem('receiptList',JSON.stringify(response.data));
-            //setReceiptItems(response.data);
             e.target.submit();
         }).catch((error) => {
-            console.error('오오오류류류류', error);
+            console.error('오류', error);
         });
     }
 
