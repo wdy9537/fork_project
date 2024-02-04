@@ -116,8 +116,6 @@ const MenuDetail = (props) => {
                                                     <tr>
                                                         <td>{options.optionName}</td>
                                                         <td id='dropdownbtn'>
-                                                            {/* <DropdownButton as={ButtonGroup} key={options.optionNo} id={'dropdown-variants-' + options.optionName} title={prOptionName[options.optList.optionName] || options.optionName} variant='secondary'> */}
-                                                            {/* <DropdownButton as={ButtonGroup} key={options.optionNo} id={'dropdown-variants-' + options.optionName} title={selectedOptionName[options.optList.optionName]?.optionName || options.optionName} variant='secondary'> */}
                                                             <DropdownButton as={ButtonGroup} key={options.optionNo} id={'dropdown-variants-' + options.optionName}
                                                                 title={findSubOption(options) ? findSubOption(options).optionName : options.optionName} variant='secondary'>
                                                                 {options && options.optList.map(opt => {
