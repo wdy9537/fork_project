@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from "react";
 import { useReceiptStore } from "../store/receiptViewStore";
 const ReceiptDetailViewl = () => {
     const receiptItem = useReceiptStore((store) => store.selectedReceipt);
-    // console.log(receiptItem);
     // 영수증 목록들
     /*
     필요 연결 테이블 옵션OPT, 메뉴MENU, 결제PAY, 영수증RECEIPT. 영수증+메뉴(영수증별 메뉴 상세)RECEIPT_MENU
