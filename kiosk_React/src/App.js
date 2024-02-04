@@ -21,7 +21,6 @@ import SockJS from 'sockjs-client';
 import { Stomp } from '@stomp/stompjs';
 import useSocketStore from "./store/socketStore";
 
-// 터치 / 터치스크롤로 수정하기
 // 화면보호기 화면
 const standByScreen1 = () => <div id='standByScreen'><img src={require('./resources/image/standByScreen1.png')} /></div>
 const standByScreen2 = () => <div id='standByScreen'><img src={require('./resources/image/standByScreen2.png')} /></div>
@@ -45,9 +44,8 @@ function App() {
     }
   };
   // 풀스크린 끝
+  
   // 화면보호기 기능 시작
-
-  // 화면보호기 화면을 인덱스로 관리
   const [standByScreenIndex, setStandByScreenIndex] = useState(0);
   // 화면보호기 화면 리스트
   const standByScreenList = [
@@ -84,7 +82,7 @@ function App() {
       // 해당 시간동안 동작이 없으면 실행
       standeByTimer = setTimeout(() => {
         setStandByScreen(true);
-      }, 2 * 100 * 100); // 30초로 바꿔놓음 // 이거 다시 3으로 바꿔놔야함!
+      }, 2 * 100 * 100);
       timerArr.push(standeByTimer);
       setStandeByTimer(timerArr);
     };
@@ -127,6 +125,7 @@ function App() {
   // 화면보호기 끝
 
   // 동연 끝
+  
   // 서뉴 시작
   
   const getCategory = useCategoryStore((state) => state.getCategory);
@@ -162,65 +161,6 @@ function App() {
 
     const cart = document.querySelector(".cart-wrap");
     hideAndShow(cart, document.querySelector(".cart-header-wrap"), 'emphasized');
-
-    // const receipt = document.querySelector(".receipt-wrap");
-    // hideAndShow(receipt, document.querySelector(".receipt-header-wrap"), 'emphasized');
-
-    // const receiptDetailButtons = document.querySelectorAll(".receipt-detail-btn");
-    // const receiptDetailTop = document.querySelector(".receipt-detail-header-wrap");
-    // const receiptHeaderButton = document.querySelector(".receipt-header-wrap");
-
-    // hideAndShow(receipt, receiptHeaderButton, 'emphasized');
-
-    // 수정================ 반복문 돌려돌려돌림판
-    // receiptDetailButtons.forEach(receiptDetailButton => {
-    //   receiptDetailButton.addEventListener("click", function () {
-    //     const receiptViews = document.querySelectorAll(".receipt-view");
-    //     for (const view of receiptViews) {
-    //       view.style.display = "none";
-    //     }
-    //     // 반복문 돌린 다음에 상세정보 보이게
-    //     receiptDetailTop.style.display = "block";
-    //   });
-    // })
-
-    // 스크롤 기능. 원하는 div 상위 영역에 클래스명 추가시 모두 사용 가능
-    // const scrollableDivs = document.getElementsByClassName('scrollable');
-
-    // [].forEach.call(scrollableDivs, function (item) {
-    //   let isMouseDown = false;
-    //   let startY;
-    //   let startScrollTop;
-
-    //   item.addEventListener('mousedown', (e) => {
-    //     isMouseDown = true;
-    //     startY = e.pageY - item.offsetTop;
-    //     startScrollTop = item.scrollTop;
-    //   });
-
-    //   item.addEventListener('mouseup', () => {
-    //     isMouseDown = false;
-    //   });
-
-    //   item.addEventListener('mousemove', (e) => {
-    //     if (!isMouseDown) return;
-    //     e.preventDefault();
-
-    //     const newY = e.pageY - item.offsetTop;
-    //     const deltaY = newY - startY;
-
-    //     item.scrollTop = startScrollTop - deltaY;
-    //   });
-
-    //   item.addEventListener('mouseleave', () => {
-    //     isMouseDown = false;
-    //   });
-    // });
-
-    //스프링부트 연결
-    // axios.get("http://localhost:3000/kiosk/category").then((response) => {
-    //   console.log(response, response.data);
-    // }).catch(console.log);
 
   }, []);
 
