@@ -8,7 +8,6 @@ const ReceiptDetailViewl = () => {
     필요 연결 테이블 옵션OPT, 메뉴MENU, 결제PAY, 영수증RECEIPT. 영수증+메뉴(영수증별 메뉴 상세)RECEIPT_MENU
     영수증 메뉴+옵션(메뉴별 옵션 상세)RECEIPT_OPTION
     */
-    // const { receiptItem } = props;
 
     // 통화단위 콤마찍기
     function formatCurrencyToKRW(number) {
@@ -22,14 +21,13 @@ const ReceiptDetailViewl = () => {
         const receiptDetailTop = document.querySelector(".receipt-detail-header-wrap");
         receiptDetailTop.style.display = "none";
 
-        // 닫기 버튼 누르면 다시 영수증 목록 보이게 반복문 돌려돌려
+        // 닫기 버튼 누르면 다시 영수증 목록 보이게 반복문
         const receiptViews = document.querySelectorAll(".receipt-view");
         for (const view of receiptViews) {
             view.style.display = "block";
         }
     }
 
-    // console.log(receiptItem); 왜때문에 빈배열;;;
     return (
         <div className="receipt-detail-header-wrap scrollable">
             <div key={receiptItem?.receiptNo}>
@@ -84,7 +82,6 @@ const ReceiptDetailViewl = () => {
                                         }
                                         <div>{option?.opt?.price?.toLocaleString()}</div>
                                         <div></div>
-                                        {/* 수량 입력하는곳 생각해보니까 메뉴와 옵션이 모두 같을 때 옵션 개수를? 굳이... 굳이.... */}
                                         {(option?.opt?.price) ? (
                                             <div>{(option?.opt?.price * receiptItem?.cnt)?.toLocaleString()}</div>
                                         ) : <div></div>}
@@ -106,7 +103,6 @@ const ReceiptDetailViewl = () => {
                         </div>
                         <div className="receipt-detail-last-1-1">
                             <div>부가세</div>
-
                             <div colSpan="3">{receiptItem?.addedTax?.toLocaleString()}</div>
                         </div>
                     </div>
