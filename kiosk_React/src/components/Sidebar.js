@@ -58,15 +58,12 @@ const Sidebar = () => {
                 </Button>
                 </Modal.Footer>
             </Modal>
-            {/* 여기만 반복 */}
-            {/* {console.log(categorys)}  5초마다 실행됨 수정 필요 */}
             {categorys && categorys.map((category) => (
                 <div key ={category.categoryNo} className="category" ><Link to="/" onClick={getPaymentProcess() ? (e) => handleShow(e) : () => {setSubCategory(category.categoryNo); scrollToSubCategory(); } }>{category.categoryName}</Link></div>
             ))}
 
 
             <div className="ding-dong">
-                {/* <button className="int">직원호출</button> */}
                 <Button className='int' id="button-dingdong" variant="secondary" onClick={() => {handleSendMsg(); setModalShow(true); }}> 직원호출 </Button>
                 <Dingdong show={modalShow} onHide={() => setModalShow(false)} />
             </div>
