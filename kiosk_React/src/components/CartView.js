@@ -20,7 +20,6 @@ const CartView = () => {
     const min = 1;
     const max = 10;
     const [count, setCount] = useState(1);
-    // const [cartItems, setCartItems] = useState([
 
     const removeCartItem = (itemId) => {
         const removedItem = cartItems.find(item => item.id === itemId);
@@ -105,9 +104,7 @@ const CartView = () => {
                                 ))}
                             </div>
                         )}
-                        {/* {cartTotalPrice ? (
-                        <div className="cartview-total-price">총합 : {cartTotalPrice.toLocaleString('ko-KR')}원</div>
-                        ) : null} */}
+
                     </div>
                     <div className="cart-order">
                         <Button id="button-coo" variant="light" onClick={() => {
