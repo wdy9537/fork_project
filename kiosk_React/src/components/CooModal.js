@@ -33,7 +33,6 @@ function CooModal(props) {
             </tr>
           </thead>
           <tbody>
-
             {
               cooList.map(coo => {
                 return(
