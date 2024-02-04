@@ -12,17 +12,10 @@ const Numpad = (props) => {
     const handleShow = () => setShow(true);
 
     const { getInputId , getItems , setItems } = numpadStore();
-    //총 금액 얻어와서 결제할수 있는 금액을 제한해야함
+    //총 금액 얻어와서 결제할수 있는 금액을 제한
     const keyboard = useRef();
 
-    const [inputPrice, setInputPrice] = useState(0); // 클릭한 금액의 값으로 얻어와야함
-
-    // const onChange = (newPrice) => {
-    //     // 현재모달창에서 키패드로 입력한 값을 저장할수 있어야함.
-    //     // setInputPrice(inputPrice +""+newPrice);
-    //     setInputPrice(inputPrice + newPrice);
-    //     //setItems(updatedItems);
-    // };
+    const [inputPrice, setInputPrice] = useState(0); // 클릭한 금액의 값으로
 
     // 숫자 버튼 클릭 시 실행되는 함수
     const onChange = (number) => {
@@ -43,16 +36,12 @@ const Numpad = (props) => {
 
     const onSubmitHandler = (e) => {
         const itemId = getInputId();
-        // items배열에서 itemId와 일치하는 item의 가격을 현재 inputPrice에 있는 값으로 바꾸고
-        // items배열의 새롭게 계산한 토탈프라이스가 
-        // 총결제금액에서 아직 결제할 금액이 남아있다면 새로운 금액창추가 --- 없애
         
         const items = getItems();
         let inputCheck = true;
         const updatedItems = items.map((item) => {
             if (item.id == itemId) {
                 if(item.maximumPrice <inputPrice){
-                    // alert("총 결제금액보다 큽니다");
                     handleShow();
                     inputCheck = false;
                     return item;
