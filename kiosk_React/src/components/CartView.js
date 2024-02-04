@@ -104,7 +104,6 @@ const CartView = () => {
                                 ))}
                             </div>
                         )}
-
                     </div>
                     <div className="cart-order">
                         <Button id="button-coo" variant="light" onClick={() => {
