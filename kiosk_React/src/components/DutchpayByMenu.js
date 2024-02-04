@@ -79,7 +79,7 @@ const DutchpayByMenu = (props) => {
         if(result > 0){
             // 결제 성공
             // 영수증번호 배열에 담아주기
-            let receiptNoList = addReceiptNo(result); // 저장된 영수증 번호(이걸 소켓에서 보내주심 됩니다. 배열형태에요)
+            let receiptNoList = addReceiptNo(result);
             console.log('****receiptNoList : ', receiptNoList);
             let message = {
                 kioskNo : kioskNo,
@@ -88,20 +88,17 @@ const DutchpayByMenu = (props) => {
             };
             setPaymentProcess(true);
 
-            if(!handleSetNewCartAfterDutchByMenu(menu, menu.totalPrice).length){ // 모두 결제된 경우
+            if(!handleSetNewCartAfterDutchByMenu(menu, menu.totalPrice).length){
+                // 모두 결제된 경우
                 // 소켓 보내주는곳
                 stompClient?.send(`/user/send/${kioskNo}`,{} , JSON.stringify(message));
-                console.log(message);
-                // 1. 소켓이 정상적으로 보내졌을 경우
-                resetReceiptNo(); // 영수증번호 리스트 비워주기
+                
+                resetReceiptNo();
                 setPaymentProcess(false);
                 navigate("/")
-                // 2. 아니면 소켓 다시 진행 반복
-                // 소켓 반복
             }
         } else {
             // 결제 실패
-            // 영수증번호 리스트 비워주기
             resetReceiptNo();
         }
         setTotalCashPrice(0);
