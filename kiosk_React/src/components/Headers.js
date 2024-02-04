@@ -33,7 +33,7 @@ const Headers = () => {
     await axios?.post(`/kiosk/receipt/${kioskNo}`)?.then((response) => {
         setReceiptItems(response.data);
     }).catch((error) => {
-        console.error('오오오류류류류', error);
+        console.error('오류', error);
     });
   }
 
@@ -57,9 +57,7 @@ const Headers = () => {
       </Modal>
       <div className="header-content">
         <div className="header-logo-wrap">
-          
           <img id='header-logo' src={`${process.env.PUBLIC_URL}/forkLogo.PNG`} alt='로고' onClick={getPaymentProcess() ? (e) => handleShow(e) : toHome}></img>
-          
         </div>
         <div id='flag'>
           No.{kioskNo}
@@ -70,7 +68,6 @@ const Headers = () => {
              return <div className="detail-category" key={subCategory.categoryName}><Link to="/" onClick={getPaymentProcess() ? (e) => handleShow(e) : () => scrollToSubCategory(subCategory.categoryName)}>{subCategory.categoryName}</Link></div>
           })}
          
-        
         </div>
         <div className="header-utils" id="header-utils">
           <div className="receipt-header-wrap">
@@ -87,19 +84,8 @@ const Headers = () => {
       </div>
     </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
   );
+
 }
 
 export default Headers
