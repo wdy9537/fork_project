@@ -44,10 +44,10 @@ function SelectPayModal(props) {
         if (result > 0) {
             // 결제 성공
             // 영수증번호 배열에 담아주기
-            let receiptNoList = addReceiptNo(result); // 저장된 영수증 번호(이걸 소켓에서 보내주심 됩니다. 배열형태에요)
+            let receiptNoList = addReceiptNo(result);
             console.log('****receiptNoList : ', receiptNoList);
 
-            // 결제 방법 별로 message 담아서 웹소켓에 보내보내
+            // 결제 방법 별로 message 담아서 웹소켓
             if (method === "카드결제") {
                 message = {
                     kioskNo: kioskNo,
@@ -163,7 +163,6 @@ function SelectPayModal(props) {
                                     </Link>
                                 </ul>
                             </>}
-                            {/* <button onClick={() => setPayMethod(null)}>돌아가기</button> */}
                         </div>
                     ) : (
                         <div className='selectPayModal'>
