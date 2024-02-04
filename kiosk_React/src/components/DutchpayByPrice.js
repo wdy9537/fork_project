@@ -53,11 +53,6 @@ const DutchpayByPrice = (props) => {
     // 키오스크 번호
     const kioskNo = useReceiptStore((state) => state.kioskNo);
     
-    // 결제된 금액 차감해서 SetCartTotalPrice
-    // const handleSetCartTotalPrice = (newCartTotalPrice) => {
-    //     setCartTotalPrice(newCartTotalPrice);
-    //     return newCartTotalPrice;
-    // }
     const [paidPrice, setPaidPrice] = useState(0);
 
     const addPaidPrice = (newPaidPrice) => {
@@ -76,7 +71,6 @@ const DutchpayByPrice = (props) => {
         let result = await dutchPay(kioskNo,{}, price);
         if(result > 0){
             // 결제 성공
-            // 영수증번호 배열에 담아주기
             let prevReceiptNoList = addReceiptNo(result);
             let paidPriceSum = addPaidPrice(price);
             setPaymentProcess(true);
@@ -114,12 +108,11 @@ const DutchpayByPrice = (props) => {
     }
 
 
-    // 최대개수 넘어가면 모달모달
+    // 최대개수 넘어가면 모달
     const [modalShow, setModalShow] = useState(false);
     const [numpadModalShow , setNumpadModalShow] = useState(false);
     const {setInputId} = numpadStore();
     // 결제 방법별 모달
-    // const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
     const { selectedPaymentMethod, setSelectedPaymentMethod, resetSelectedPaymentMethod } = paymentModalStore();
     const {cartTotalPrice, setCartTotalPrice, cartItems, resetCartStore} = useCartStore();
 
@@ -129,7 +122,6 @@ const DutchpayByPrice = (props) => {
         }, 0);
         console.log(totalInputPrice , cartTotalPrice)
         if(totalInputPrice != cartTotalPrice ){
-            // alert('입력하신 금액과 총결제 금액이 일치하지 않습니다.');
             handleShow();
             return false;
         }
@@ -174,7 +166,7 @@ const DutchpayByPrice = (props) => {
     }
 
     //최소하나 초기값 필요 
-    const [pricePerPerson, setPricePerPerson] = useState(cartTotalPrice); // 샘플 가격만들만들 이거 저장소에서 가져올 것
+    const [pricePerPerson, setPricePerPerson] = useState(cartTotalPrice);
     const {items, setItems} = numpadStore();
     useEffect(() =>{
         setItems([ {
@@ -184,24 +176,18 @@ const DutchpayByPrice = (props) => {
             paymentStatus : false
         }])
     },[])
-    // const [items, setItems] = useState([ // 최초 1개 결제창 뜨게 기본값 셋ㅅ팅 =>이 때는 키패드가 뜨지 않게 해야함.
-        // {
-        //     id: 0,
-        //     price: pricePerPerson,
-        // }
-    // ]); // 이거 zustand로 변경할거임
-    const [count, setCount] = useState(1); // 이건 그냥 쓸 거임 삭제 xx
 
-    // 나누기 해서 소수점은 다 버려 . 그리고 """나머지"""가 0 이상이면 나머지를 1로 나눠 그 개수만큼 아이템 + 1  
+    const [count, setCount] = useState(1);
+
     const handleAddItem = () => {
-        if (items.length < 10) { // 최대 개수 지정해주주주고
+        if (items.length < 10) {
             setCount(count + 1);
             const unPaymentItems = items.filter( item => !item.paymentStatus); // 결제안함
             const paymentItems = items.filter( item => item.paymentStatus); // 결제함
             const leftPrice = pricePerPerson - paymentItems.reduce((total , item ) => {return total + item.price} , 0);
 
-            const newPrice = Math.floor(leftPrice / (unPaymentItems.length + 1));// 나눠나눠하고 소수점 버림
-            const modPrice = leftPrice % (unPaymentItems.length + 1); // 나머지값 구한거
+            const newPrice = Math.floor(leftPrice / (unPaymentItems.length + 1));
+            const modPrice = leftPrice % (unPaymentItems.length + 1); // 나머지값
 
             const updatedItems = unPaymentItems.map((item, index) => ({
                 ...item,
@@ -223,11 +209,9 @@ const DutchpayByPrice = (props) => {
 
         const leftPrice = pricePerPerson - paymentItems.reduce((total , item ) => {return total + item.price} , 0);
 
-        const newPrice = Math.floor(leftPrice / (unPaymentItems.length));// 나눠나눠하고 소수점 버림
-        const modPrice = leftPrice % (unPaymentItems.length); // 나머지값 구한거
+        const newPrice = Math.floor(leftPrice / (unPaymentItems.length));
+        const modPrice = leftPrice % (unPaymentItems.length); // 나머지값
 
-        // const newPrice = Math.floor(pricePerPerson / (newItems.length));
-        // const modPrice = pricePerPerson % (newItems.length);
         const updatedItems = unPaymentItems.map((item, index) => ({
             ...item,
             price: newPrice + (index < modPrice ? 1 : 0),
@@ -235,7 +219,7 @@ const DutchpayByPrice = (props) => {
         setItems([...paymentItems , ...updatedItems]);
     }
 
-    // 숫자패드패드
+    // 숫자패드
     const handleNumPad = (e) => {
         const next = e.target.nextElementSibling
         const id = e.target.id;
