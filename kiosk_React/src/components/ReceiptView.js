@@ -7,7 +7,6 @@ const transformData = (receiptItems) => {
         return [];
     }
         const updatedItems = receiptItems.map(receiptItem => {
-            //debugger;
             const updateMenuItems = receiptItem.rmList.map(menu => 
                 {
                     const menuPrice = menu.menu?.price || 0;
@@ -33,16 +32,10 @@ const transformData = (receiptItems) => {
 
 const ReceiptView = () => {
 
-    // 데이터 확인 확인용
     const { kioskNo, receiptItems, setReceiptItems, setSelectedReceipt, selectedReceipt } = useReceiptStore();
     
     const groupedReceipts = transformData(receiptItems?.rlist);
-    // console.log(typeof receiptItems.menuTotal);
-    // console.log("야 이게 맞냐....", receiptItems);
 
-    // 수정수정수정
-
-    // 인덱스 번호로 영수증별 상세영수증 조회 필요함
     const handleReceiptClick = (receiptNo) => {
         const selectedReceipt = groupedReceipts?.find(receiptItem => receiptItem.receiptNo === receiptNo);
         console.log(selectedReceipt);
@@ -83,14 +76,13 @@ const ReceiptView = () => {
   
       hideAndShow(receipt, receiptHeaderButton, 'emphasized');
   
-      // 수정================ 반복문 돌려돌려돌림판
       receiptDetailButtons.forEach(receiptDetailButton => {
         receiptDetailButton.addEventListener("click", function () {
           const receiptViews = document.querySelectorAll(".receipt-view");
           for (const view of receiptViews) {
             view.style.display = "none";
           }
-          // 반복문 돌린 다음에 상세정보 보이게
+          // 반복문 돌린 다음에 상세정보
           receiptDetailTop.style.display = "block";
         });
       })
