@@ -52,7 +52,6 @@ public class KioskController {
 	@PostMapping("/receipt/{kioskNo}")
 	public TotalReceipt totalReceiptTest(@PathVariable("kioskNo") int kioskNo , HttpSession session){
 		session.setAttribute("kioskNo", kioskNo);
-//		log.info("kioskNo:{}", kioskNo);
 		TotalReceipt totalReceipt = kioskService.selectTotalReceipt(kioskNo);
 		log.info("list : {}" , totalReceipt);
 		return totalReceipt;
@@ -126,18 +125,5 @@ public class KioskController {
 		// 오류
 		return 0;
 	}
-	
-	/*
-	 * @GetMapping("/receipt") public ResponseEntity<?> getReceiptData(HttpServletRequest request) { 
-	 * HttpSession session = request.getSession(); Integer kioskNo = (Integer) session.getAttribute("kioskNo");
-	 * 
-	 * if (kioskNo != null) { 
-	 * List<receipt> receipt = kioskService.getReceiptData(kioskNo); 
-	 * return ResponseEntity.ok(getReceiptData); 
-	 * } else { 
-	 * return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("세션이 없거나 유효하지 않습니다."); }
-	 * }
-	 */
-
     
 }
