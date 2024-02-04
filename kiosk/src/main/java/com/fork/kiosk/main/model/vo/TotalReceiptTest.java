@@ -15,8 +15,8 @@ public class TotalReceiptTest{
 	private int kioskNo;
 	private String orderStatus;
 	
-    private int receiptNo;
-    private int payNo;
+	private int receiptNo;
+	private int payNo;
     
 	private int RcmNo;
 	private int menuNo;
