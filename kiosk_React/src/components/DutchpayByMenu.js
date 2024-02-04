@@ -80,7 +80,6 @@ const DutchpayByMenu = (props) => {
             // 결제 성공
             // 영수증번호 배열에 담아주기
             let receiptNoList = addReceiptNo(result);
-            console.log('****receiptNoList : ', receiptNoList);
             let message = {
                 kioskNo : kioskNo,
                 price : cashPrice == 0 ? null : getTotalCashPrice(),
